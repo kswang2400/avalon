@@ -1,8 +1,10 @@
 coverage
 Django==1.9
+django-extensions
 ipdb
 ipython
 psycopg2==2.7.3
 pytest
 pytest-cov
 python-coveralls
+Werkzeug
