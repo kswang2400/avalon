@@ -75,12 +75,14 @@ WSGI_APPLICATION = 'avalon.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    },
+    'postgres_fml': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'avalon',
+        'NAME': os.environ.get('AV_DB_NAME'),
         'USER': os.environ.get('AV_DB_USER'),
         'PASSWORD': os.environ.get('AV_DB_PW'),
-        'HOST': 'localhost',
-        'PORT': '',
     }
 }
 

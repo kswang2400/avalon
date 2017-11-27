@@ -8,6 +8,7 @@
 ```
 mkvirtualenv --python=/usr/bin/python3 avalon
 virtualenv -p python3 avalon
+psql --u postgres
 ```
 
 
