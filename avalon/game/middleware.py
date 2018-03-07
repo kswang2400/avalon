@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 class AuthRequiredMiddleware(object):
@@ -7,6 +7,7 @@ class AuthRequiredMiddleware(object):
             reverse('login'),
             reverse('signup'),
         ]
+
         if not request.user.is_authenticated() and request.path not in unauthenticated_views:
             return HttpResponseRedirect(reverse('login'))
 

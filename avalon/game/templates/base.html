@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/static/style.css" />
     <title>{% block title %}Avalon{% endblock %}</title>
 </head>
 
 <body>
+    <div id="header">
+        {% if user.id %}
+            {{ user }}
+            <a name="logout" href='/logout/'>Logout</a>
+        {% else %}
+            <a name="signup" href='/signup/'>Sign Up</a>
+            <a name="login" href='/login/'>Login</a>
+        {% endif %}
+    </div>
     <div id="content">
         {% block content %}{% endblock %}
     </div>

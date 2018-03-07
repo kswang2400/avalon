@@ -1,14 +1,13 @@
 from django.contrib.auth import login, authenticate
-from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
 
 from game.models import AvalonUserCreationForm
 
 def index(request):
-    return HttpResponse(
-        "Hello, {user}. Welcome to Avalon.".format(user=request.user))
-
+    return render(request, 'index.html', {'foo': 'bar'})
 
 def signup(request):
     if request.user.is_authenticated():
