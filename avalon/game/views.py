@@ -11,6 +11,9 @@ def index(request):
 
 
 def signup(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('index'))
+
     if request.method == 'POST':
         form = AvalonUserCreationForm(request.POST)
         if form.is_valid():
@@ -25,14 +28,3 @@ def signup(request):
         form = AvalonUserCreationForm()
 
     return render(request, 'signup.html', {'form': form})
-
-def login(request):
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('index'))
-
-    template = loader.get_template('login.html')
-    context = {
-        'foo': 'bar',
-    }
-
-    return HttpResponse(template.render(context, request))

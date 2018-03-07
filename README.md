@@ -2,6 +2,7 @@
 
 ### TODOS
 [ ] install shell plus
+[ ] setup real database
 
 ### python3 virtual env
 
