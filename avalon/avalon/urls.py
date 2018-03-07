@@ -19,7 +19,7 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
+    url(r'^', include('game.urls')),
     url(r'^accounts/profile/', views.profile, name='profile'),
     url(r'^admin/', admin.site.urls),
-    url(r'^game/', include('game.urls')),
 ]

@@ -7,7 +7,7 @@ from game.models import AvalonUserCreationForm
 
 def index(request):
     return HttpResponse(
-        "Hello, {user}. You're at the polls index.".format(user=request.user))
+        "Hello, {user}. Welcome to Avalon.".format(user=request.user))
 
 
 def signup(request):
