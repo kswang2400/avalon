@@ -1,4 +1,6 @@
 *.sqlite3
 *.pyc
 
+**/migrations/
+
 env.sh
