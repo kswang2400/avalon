@@ -4,7 +4,8 @@ from django.contrib.auth.models import AbstractUser
 
 
 class AvalonUser(AbstractUser):
-    pass
+    def __repr__(self):
+        return self.username
 
 class AvalonUserCreationForm(UserCreationForm):
     class Meta:
