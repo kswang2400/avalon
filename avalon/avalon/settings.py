@@ -25,7 +25,9 @@ SECRET_KEY = '@xgqu7(zux__dzad4g)49&rd=%81@b6pi_dl$*vrd^d+w(_1r#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '34.212.31.133:8000', # KW: this is foobar
+]
 
 
 # Application definition
