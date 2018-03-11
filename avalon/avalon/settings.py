@@ -80,12 +80,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mydatabase',
     },
-    'postgres_fml': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('AV_DB_NAME'),
-        'USER': os.environ.get('AV_DB_USER'),
-        'PASSWORD': os.environ.get('AV_DB_PW'),
-    }
+    # KW: TODO set up real db
+    # 'postgres_fml': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': os.environ.get('AV_DB_NAME'),
+    #     'USER': os.environ.get('AV_DB_USER'),
+    #     'PASSWORD': os.environ.get('AV_DB_PW'),
+    # }
 }
 
 AUTH_USER_MODEL = 'game.AvalonUser'

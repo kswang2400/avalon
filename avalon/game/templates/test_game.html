@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>game</h2>
+
+  <h3>current state</h3>
+
+  current_quest: {{ current_quest.pk }}<br>
+  quest_master: {{ quest_master.user.username }}<br>
+  quest_members: {{ current_quest.members }}<br>
+  passed?: {{ current_quest.is_successful }}<br>
+
+  <h3>quests</h3>
+
+  {% for quest in quests %}
+    num_players: {{ quest.num_players }}<br>
+    quest id: {{ quest.id }}
+    &ensp;&ensp;&ensp;&ensp;
+    [{{ quest.prev_quest_id }}, {{ quest.next_quest_id }}]<br>
+    {{ current_quest.is_successful }}<br>
+    <br>
+  {% endfor %}
+
+  <h3>metadata</h3>
+
+  id: {{ pk }}<br>
+  users:  {{ users }}<br>
+  quest_sizes:  {{ quest_sizes }}<br>
+  current_quest:  {{ current_quest.pk }}<br>
+
+  <br>
+
+  assasin:  {{ assasin }}<br>
+  merlin:  {{ merlin }}<br>
+  mordred:  {{ mordred }}<br>
+  morgana:  {{ morgana }}<br>
+  percival:  {{ percival }}<br>
+
+  <br>
+
+  loyals:  {{ loyal_servants }}<br>
+
+  <br>
+
+  minions:  {{ minions_of_mordred }}<br>
+
+  <br><br><br><br><br><br><br><br><br><br><br>
+
+{% endblock %}

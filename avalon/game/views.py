@@ -4,7 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
 
-from game.models import AvalonUserCreationForm
+from game.forms import AvalonUserCreationForm
+from game.avalon import Game
 
 def index(request):
     return render(request, 'index.html', {'foo': 'bar'})
@@ -27,3 +28,10 @@ def signup(request):
         form = AvalonUserCreationForm()
 
     return render(request, 'signup.html', {'form': form})
+
+
+def test_game(request, pk):
+    # KW: TODO urls game pk parsing is wonky
+    game = Game(pk=8)
+
+    return render(request, 'test_game.html', game.get_debug_context())
