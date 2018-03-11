@@ -34,6 +34,34 @@ class AvalonGame(models.Model):
     def game_users(self):
         return AvalonGameUser.objects.filter(game=self)
 
+    @property
+    def assasin(self):
+        return self.game_users.filter(role=AvalonGameUser.ASSASIN)
+
+    @property
+    def merlin(self):
+        return self.game_users.filter(role=AvalonGameUser.MERLIN)
+
+    @property
+    def morgana(self):
+        return self.game_users.filter(role=AvalonGameUser.MORGANA)
+
+    @property
+    def mordred(self):
+        return self.game_users.filter(role=AvalonGameUser.MORDRED)
+
+    @property
+    def percival(self):
+        return self.game_users.filter(role=AvalonGameUser.PERCIVAL)
+
+    @property
+    def loyal_servants(self):
+        return self.game_users.filter(role=AvalonGameUser.LOYAL_SERVANT)
+
+    @property
+    def minions_of_mordred(self):
+        return self.game_users.filter(role=AvalonGameUser.MINION_OF_MORDRED)
+
     def create(cls, new_game):
         avalon_game = cls(
             user=new_game.user,

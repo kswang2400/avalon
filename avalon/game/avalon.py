@@ -56,11 +56,14 @@ class Game(object):
             'quest_sizes',
             'current_quest',
 
-            # 'assasin',
-            # 'merlin',
-            # 'mordred',
-            # 'morgana',
-            # 'percival',
+            'assasin',
+            'merlin',
+            'mordred',
+            'morgana',
+            'percival',
+
+            'loyal_servants',
+            'minions_of_mordred',
         ]
 
         debug_context = {}
@@ -84,11 +87,14 @@ class SavedGame(object):
         self.quest_sizes,
         self.roles) = CONFIGS[len(self.users)]
 
-        # self.assasin = saved_game.assasin
-        # self.merlin = saved_game.merlin
-        # self.mordred = saved_game.mordred
-        # self.morgana = saved_game.morgana
-        # self.percival = saved_game.percival
+        self.assasin = saved_game.assasin
+        self.merlin = saved_game.merlin
+        self.mordred = saved_game.mordred
+        self.morgana = saved_game.morgana
+        self.percival = saved_game.percival
+
+        self.loyal_servants = saved_game.loyal_servants
+        self.minions_of_mordred = saved_game.minions_of_mordred
 
 class NewGame(object):
     def __init__(self, users):
@@ -127,4 +133,20 @@ class NewGame(object):
         random.shuffle(users)
         random.shuffle(roles)
 
-        return list(zip(users, roles))
+        ordered_users_with_roles = list(zip(users, roles))
+
+        # KW: TODO its time to define game interface for saved/new game
+        # KW: TODO this is the wrong place for this
+        self.loyal_servants = [
+            x[0]
+            for x
+            in ordered_users_with_roles
+                if x[1] == AvalonGameUser.LOYAL_SERVANT]
+
+        self.minions_of_mordred = [
+            x[0]
+            for x
+            in ordered_users_with_roles
+                if x[1] == AvalonGameUser.MINION_OF_MORDRED]
+
+        return ordered_users_with_roles
