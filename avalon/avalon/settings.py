@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'game.apps.GameConfig',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'game.middleware.AuthRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'avalon.urls'
@@ -87,7 +88,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'game.User'
+AUTH_USER_MODEL = 'game.AvalonUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

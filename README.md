@@ -2,6 +2,11 @@
 
 ### TODOS
 [ ] install shell plus
+[ ] setup real database
+[ ] implement game
+
+### optional
+[ ] setup websockets?
 
 ### python3 virtual env
 
