@@ -31,7 +31,6 @@ def signup(request):
 
 
 def test_game(request, pk):
-    print('\n\n\npk\n\n\n')
-    game = Game(pk=1)
+    game = Game(pk=pk)
 
     return render(request, 'test_game.html', game.get_debug_context())
