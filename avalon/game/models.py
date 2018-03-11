@@ -7,20 +7,9 @@ class AvalonUser(AbstractUser):
         return '<AvalonUser user: {u}>'.format(u=self.username)
 
 class AvalonGame(models.Model):
-    QUEST_CHOICES = [
-        ('1', '1'),
-        ('2', '2'),
-        ('3', '3'),
-        ('4', '4'),
-        ('5', '5'),
-    ]
-
     user = models.ForeignKey(AvalonUser, related_name='user')
     quest_master = models.ForeignKey('AvalonGameUser', related_name='quest_master', blank=True, null=True)
-    current_quest = models.CharField(
-        max_length=1,
-        choices=QUEST_CHOICES,
-        default='1')
+    current_quest = models.ForeignKey('AvalonQuest', related_name='current_quest', blank=True, null=True)
 
     def __repr__(self):
         return '<AvalonGame users: {u}>'.format(u=self.users.values_list('username', flat=True))
@@ -63,11 +52,26 @@ class AvalonGame(models.Model):
         return self.game_users.filter(role=AvalonGameUser.MINION_OF_MORDRED)
 
     def create(cls, new_game):
-        avalon_game = cls(
-            user=new_game.user,
-            current_quest=new_game.current_quest,
-        )
+        avalon_game = cls(user=new_game.user)
         avalon_game.save()
+
+        # KW: TODO refactor this out for creating quests
+        quests = [
+            AvalonQuest.objects.create(game=avalon_game, num_players=n)
+            for n
+            in new_game.quest_sizes]
+
+        for i, quest in enumerate(quests):
+            if i == 0:
+                avalon_game.current_quest = quest
+                avalon_game.save()
+            elif i == len(quests) -1 :
+                quest.prev_quest = quests[i - 1]
+            else:
+                quest.prev_quest = quests[i - 1]
+                quest.next_quest = quests[i + 1]
+
+            quest.save()
 
         # KW: TODO refactor this out for linking ordered game users
         users = [x[0] for x in new_game.users]
@@ -95,7 +99,11 @@ class AvalonGame(models.Model):
         return avalon_game
 
 class AvalonQuest(models.Model):
-    game = models.ForeignKey(AvalonGame, related_name='game')
+    game = models.ForeignKey(AvalonGame)
+    num_players = models.IntegerField(default=2)
+
+    prev_quest = models.ForeignKey('AvalonQuest', related_name='prev', blank=True, null=True)
+    next_quest = models.ForeignKey('AvalonQuest', related_name='next', blank=True, null=True)
 
 class AvalonGameUser(models.Model):
     LOYAL_SERVANT = 1
