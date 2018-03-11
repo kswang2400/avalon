@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.template import loader
 
 from game.models import AvalonUserCreationForm
+from game.avalon import AvalonGame
 
 def index(request):
     return render(request, 'index.html', {'foo': 'bar'})
@@ -27,3 +28,20 @@ def signup(request):
         form = AvalonUserCreationForm()
 
     return render(request, 'signup.html', {'form': form})
+
+
+def test_game(request):
+    game = AvalonGame(num_players=7)
+    inline_template = """
+        num_players: {num_players}<br>
+        num_resistance: {num_resistance}<br>
+        num_spies: {num_spies}<br>
+        mission_sizes: {mission_sizes}<br>
+    """.format(
+            num_players=game.num_players,
+            num_resistance=game.num_resistance,
+            num_spies=game.num_spies,
+            mission_sizes=game.mission_sizes,
+        )
+
+    return HttpResponse(inline_template)
