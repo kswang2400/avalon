@@ -12,6 +12,17 @@ from game.roles import (
 )
 
 class Game(object):
+    def __init__(self, pk=None, users=None):
+        if pk:
+            self.game = SavedGame(pk)
+        else:
+            self.game = NewGame(users)
+
+class SavedGame(object):
+    def __init__(self, pk):
+        saved_game = AvalonGame.objects.get(pk=pk)
+
+class NewGame(object):
     # KW: TODO figure out roles per num players (default: 6)
     # KW: TODO don't hardcode loyal/minions in base roles
     # BASE_ROLES = ['merlin', 'assasin']

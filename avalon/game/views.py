@@ -30,7 +30,8 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
-def test_game(request):
-    game = Game(AvalonGame.objects.get(pk=1))
+def test_game(request, pk):
+    print('\n\n\npk\n\n\n')
+    game = Game(pk=1)
 
     return render(request, 'test_game.html', game.get_debug_context())

@@ -1,5 +1,5 @@
 coverage
-Django==1.9
+Django==1.11
 django-extensions
 ipdb
 ipython
