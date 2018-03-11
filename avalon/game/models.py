@@ -89,6 +89,10 @@ class AvalonGame(models.Model):
             curr.save()
             nex.save()
 
+        # KWL: TODO ask for age so we always start with youngest xP
+        avalon_game.quest_master = curr
+        avalon_game.save()
+
         return avalon_game
 
 class AvalonQuest(models.Model):
@@ -110,8 +114,8 @@ class AvalonQuest(models.Model):
             n=self.num_players)
 
     @property
-    def is_failed(self):
-        return any(AvalonQuestMember.objects.filter(quest=self
+    def is_successful(self):
+        return all(AvalonQuestMember.objects.filter(quest=self
             ).values_list('vote_pass', flat=True))
 
     def reset_quest_members(self, game_users):

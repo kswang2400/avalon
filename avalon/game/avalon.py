@@ -26,10 +26,7 @@ CONFIGS = {
 
 class Game(object):
     def __init__(self, pk=None, users=None):
-        if pk:
-            self.game = SavedGame(pk)
-        else:
-            self.game = NewGame(users)
+        self.game = SavedGame(pk) if pk else NewGame(users)
 
     def get_debug_context(self):
         debug_fields = [
@@ -48,6 +45,7 @@ class Game(object):
             'minions_of_mordred',
 
             'quests',
+            'quest_master',
         ]
 
         debug_context = {}
@@ -93,6 +91,7 @@ class SavedGame(object):
         self.minions_of_mordred = saved_game.who_is(AvalonGameUser.MINION_OF_MORDRED)
 
         self.quests = self.avalon_game.quests
+        self.quest_master = self.avalon_game.quest_master
 
 class NewGame(object):
     def __init__(self, users):
@@ -108,6 +107,7 @@ class NewGame(object):
         # KW: TODO make this cleaner
         self.pk = self.avalon_game.pk
         self.quests = self.avalon_game.quests
+        self.quest_master = self.avalon_game.quest_master
 
         return
 
