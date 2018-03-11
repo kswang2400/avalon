@@ -33,10 +33,12 @@ class AvalonGame(object):
     }
 
     def __init__(self, users):
-        roles = self._setup_game_configs(users)
-
         self._create_empty_roles()
+
+        roles = self._setup_game_configs(users)
         self._distribute_roles(users, roles)
+
+        self.save_game_data()
 
         return
 
@@ -80,17 +82,17 @@ class AvalonGame(object):
 
         return
 
+    def save_game_data(self):
+        pass
+
     def vote_to_go_on_quest(self):
         pass
 
     def get_debug_context(self):
         debug_fields = [
             'users',
-            'num_resistance',
-            'num_spies',
             'quest_sizes',
             'current_quest',
-            'roles',
 
             'assasin',
             'merlin',
