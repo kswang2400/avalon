@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Test Game</h2>
+  <h2>game</h2>
+  id: {{ pk }}<br>
   users:  {{ users }}<br>
   quest_sizes:  {{ quest_sizes }}<br>
   current_quest:  {{ current_quest }}<br>
@@ -12,14 +13,7 @@
   merlin:  {{ merlin }}<br>
   mordred:  {{ mordred }}<br>
   morgana:  {{ morgana }}<br>
-  percival:  {{ percival }}<br>
-
-  <br><br><br>
-
-  loyals:  {{ loyal_servants }}<br>
-
-  <br><br><br>
-
+  percival:  {{ percival }}<br><br>
+  loyals:  {{ loyal_servants }}<br><br>
   minions:  {{ minions_of_mordred }}<br>
-
 {% endblock %}

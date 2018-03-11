@@ -37,6 +37,9 @@ class Game(object):
             try:
                 self.game = SavedGame(pk)
             except AvalonGame.DoesNotExist:
+                # KW: for testing purposes only
+                # KW: TODO 404 here instead of creating new game
+                # this is bad idea
                 self.game = NewGame(
                     users=list(AvalonUser.objects.filter(username__in=[
                         'kevin',
@@ -49,9 +52,9 @@ class Game(object):
         else:
             self.game = NewGame(users)
 
-
     def get_debug_context(self):
         debug_fields = [
+            'pk',
             'users',
             'quest_sizes',
             'current_quest',
@@ -79,6 +82,7 @@ class SavedGame(object):
         saved_game = AvalonGame.objects.get(pk=pk)
 
         self.avalon_game = saved_game
+        self.pk = saved_game.pk
         self.current_quest = saved_game.current_quest
         self.users = saved_game.users
 
@@ -105,6 +109,7 @@ class NewGame(object):
 
         self.users = ordered_users_with_roles
         self.avalon_game = AvalonGame.create(AvalonGame, self)
+        self.pk = avalon_game.pk
 
         return
 
