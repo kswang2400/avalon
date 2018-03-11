@@ -50,7 +50,23 @@ class AvalonGame(models.Model):
             current_quest=new_game.current_quest)
 
         for user in new_game.users:
-            AvalonGameUser.objects.create(game=avalon_game, user=user)
+            current_player = AvalonGameUser.objects.create(
+                game=avalon_game,
+                user=user)
+
+        for index in range(len(new_game.users)):
+            prev, curr, nnext = (index - 1) % len(new_game.users), index, (index + 1) % len(new_game.users)
+            print('\n\n{p}\n{c}\n{n}\n\n'.format(p=prev, c=curr, n=nnext))
+            prev, curr, nnext = new_game.users[prev], new_game.users[curr], new_game.users[nnext]
+
+            prev.next_player = curr
+            curr.prev_player = prev
+            curr.next_player = nnext
+            nnext.prev_player = curr
+
+            prev.save()
+            curr.save()
+            nnext.save()
 
         return avalon_game
 
@@ -60,3 +76,6 @@ class AvalonQuest(models.Model):
 class AvalonGameUser(models.Model):
     user = models.ForeignKey(AvalonUser)
     game = models.ForeignKey(AvalonGame)
+
+    prev_player = models.ForeignKey('AvalonGameUser', related_name='prev')
+    next_player = models.ForeignKey('AvalonGameUser', related_name='next')

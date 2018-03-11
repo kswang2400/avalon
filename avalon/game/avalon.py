@@ -38,6 +38,7 @@ class Game(object):
         else:
             self.game = NewGame(users)
 
+
     def get_debug_context(self):
         debug_fields = [
             'users',
@@ -73,10 +74,14 @@ class SavedGame(object):
     def __init__(self, pk):
         saved_game = AvalonGame.objects.get(pk=pk)
 
-        self.users = saved_game.users
+        self.avalon_game = saved_game
         self.current_quest = saved_game.current_quest
+        self.users = saved_game.users
 
-        self.quest_sizes = CONFIGS[len(self.users)]
+        (self.num_resistance,
+        self.num_spies,
+        self.quest_sizes,
+        self.roles) = CONFIGS[len(self.users)]
 
         self.assasin = saved_game.assasin
         self.merlin = saved_game.merlin
@@ -99,9 +104,10 @@ class NewGame(object):
         self._create_empty_roles()
 
         roles = self._setup_game_configs(users)
-        self._distribute_roles(users, roles)
+        ordered_users = self._distribute_roles(users, roles)
 
-        # self.save_game_data()
+        self.users = ordered_users
+        self.avalon_game = AvalonGame.create(self)
 
         return
 
@@ -138,15 +144,11 @@ class NewGame(object):
 
     def _distribute_roles(self, users, roles):
         random.shuffle(users)
+        random.shuffle(roles)
 
         index = 0
         for role in roles:
             getattr(self, role).set_player(users[index])
             index += 1
 
-        return
-
-    def save_game_data(self):
-        game = AvalonGame.create(self)
-
-        return game.pk
+        return users
