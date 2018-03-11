@@ -94,14 +94,14 @@ class SavedGame(object):
         self.quest_sizes,
         self.roles) = CONFIGS[len(self.users)]
 
-        self.assasin = saved_game.assasin
-        self.merlin = saved_game.merlin
-        self.mordred = saved_game.mordred
-        self.morgana = saved_game.morgana
-        self.percival = saved_game.percival
+        self.assasin = saved_game.who_is(AvalonGameUser.ASSASIN)
+        self.merlin = saved_game.who_is(AvalonGameUser.MERLIN)
+        self.mordred = saved_game.who_is(AvalonGameUser.MORDRED)
+        self.morgana = saved_game.who_is(AvalonGameUser.MORGANA)
+        self.percival = saved_game.who_is(AvalonGameUser.PERCIVAL)
 
-        self.loyal_servants = saved_game.loyal_servants
-        self.minions_of_mordred = saved_game.minions_of_mordred
+        self.loyal_servants = saved_game.who_is(AvalonGameUser.LOYAL_SERVANT)
+        self.minions_of_mordred = saved_game.who_is(AvalonGameUser.MINION_OF_MORDRED)
 
         self.quests = self.avalon_game.quests
 
