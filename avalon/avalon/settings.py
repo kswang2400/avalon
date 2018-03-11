@@ -26,7 +26,7 @@ SECRET_KEY = '@xgqu7(zux__dzad4g)49&rd=%81@b6pi_dl$*vrd^d+w(_1r#'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '34.212.31.133:8000', # KW: this is foobar
+    '34.212.31.133', # KW: this is foobar
 ]
 
 
