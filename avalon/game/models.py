@@ -76,14 +76,9 @@ class AvalonGame(models.Model):
                 role=role)
 
         for index in range(len(users)):
-            (prev,
-            curr,
-            nex) =  (index - 1) % len(users),
-                    index,
-                    (index + 1) % len(users)
-            prev = AvalonGameUser.objects.get(game=avalon_game, user=users[prev])
-            curr = AvalonGameUser.objects.get(game=avalon_game, user=users[curr])
-            nex = AvalonGameUser.objects.get(game=avalon_game, user=users[nex])
+            prev = self.game_users.filter(user=users[(index - 1) % len(users)])
+            curr = self.game_users.filter(user=users[index])
+            nex = self.game_users.filter(user=users[(index + 1) % len(users)])
 
             prev.next_player = curr
             curr.prev_player = prev
