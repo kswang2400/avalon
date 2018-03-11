@@ -39,7 +39,7 @@ class Game(object):
         roles = self._setup_game_configs(users)
         self._distribute_roles(users, roles)
 
-        self.save_game_data()
+        # self.save_game_data()
 
         return
 
@@ -63,6 +63,7 @@ class Game(object):
         return
 
     def _setup_game_configs(self, users):
+        self.user = users[0]
         self.users = users
         self.current_quest = 0
 
@@ -84,9 +85,15 @@ class Game(object):
         return
 
     def save_game_data(self):
-        game = Game.create(self)
+        print('\n\nsave game data\n\n')
+        game = AvalonGame.create(self)
 
         return
+
+    def get_table_configs(self):
+        return {
+            'user': self.user,
+        }
 
     def vote_to_go_on_quest(self):
         pass

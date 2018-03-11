@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
 
-from game.models import AvalonUser, AvalonUserCreationForm
+from game.forms import AvalonUserCreationForm
 from game.avalon import Game
 
 def index(request):
@@ -31,16 +31,6 @@ def signup(request):
 
 
 def test_game(request):
-    # KW: TODO need to seed users
-    fake_users = [
-        AvalonUser.objects.get(username='kevin'),
-        AvalonUser.objects.get(username='evan'),
-        AvalonUser.objects.get(username='choi'),
-        AvalonUser.objects.get(username='kent'),
-        AvalonUser.objects.get(username='marcus'),
-        AvalonUser.objects.get(username='greg'),
-    ]
-
-    game = Game(users=fake_users)
+    game = Game(AvalonGame.objects.get(pk=1))
 
     return render(request, 'test_game.html', game.get_debug_context())
