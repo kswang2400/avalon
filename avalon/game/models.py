@@ -24,6 +24,16 @@ class AvalonGame(models.Model):
         return AvalonGameUser.objects.filter(game=self)
 
     @property
+    def quests(self):
+        ordered_quests = []
+        current_quest = self.current_quest
+        while current_quest is not None:
+            ordered_quests.append(current_quest)
+            current_quest = current_quest.next_quest
+
+        return ordered_quests
+
+    @property
     def assasin(self):
         return self.game_users.filter(role=AvalonGameUser.ASSASIN)
 
@@ -65,6 +75,7 @@ class AvalonGame(models.Model):
             if i == 0:
                 avalon_game.current_quest = quest
                 avalon_game.save()
+                quest.next_quest = quests[i + 1]
             elif i == len(quests) -1 :
                 quest.prev_quest = quests[i - 1]
             else:

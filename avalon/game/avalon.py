@@ -69,11 +69,7 @@ class Game(object):
             'loyal_servants',
             'minions_of_mordred',
 
-            'quest_1',
-            'quest_2',
-            'quest_3',
-            'quest_4',
-            'quest_5',
+            'quests',
         ]
 
         debug_context = {}
@@ -107,7 +103,7 @@ class SavedGame(object):
         self.loyal_servants = saved_game.loyal_servants
         self.minions_of_mordred = saved_game.minions_of_mordred
 
-        self.quest_1 = self.quest_2 = self.quest_3 = self.quest_4 = self.quest_5 = 'barfoo'
+        self.quests = self.avalon_game.quests
 
 class NewGame(object):
     def __init__(self, users):
@@ -120,9 +116,7 @@ class NewGame(object):
 
         self.avalon_game = AvalonGame.create(AvalonGame, self)
         self.pk = self.avalon_game.pk
-
-        # KW: TODO initialize quests
-        self.quest_1 = self.quest_2 = self.quest_3 = self.quest_4 = self.quest_5 = 'foobar'
+        self.quests = self.avalon_game.quests
 
         return
 

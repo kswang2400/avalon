@@ -5,11 +5,14 @@
 
   <h3>current state</h3>
 
-  quest 1: {{ quest_1 }}<br>
-  quest 2: {{ quest_2 }}<br>
-  quest 3: {{ quest_3 }}<br>
-  quest 4: {{ quest_4 }}<br>
-  quest 5: {{ quest_5 }}<br>
+  {% for quest in quests %}
+    <br>
+    {{ quest.id }}<br>
+    {{ quest.prev_quest_id }}<br>
+    {{ quest.next_quest_id }} <br>
+    {{ quest.num_players }}<br>
+    <br>
+  {% endfor %}
 
   <h3>metadata</h3>
 
@@ -18,13 +21,20 @@
   quest_sizes:  {{ quest_sizes }}<br>
   current_quest:  {{ current_quest }}<br>
 
-  <br><br><br>
+  <br>
 
   assasin:  {{ assasin }}<br>
   merlin:  {{ merlin }}<br>
   mordred:  {{ mordred }}<br>
   morgana:  {{ morgana }}<br>
-  percival:  {{ percival }}<br><br>
-  loyals:  {{ loyal_servants }}<br><br>
+  percival:  {{ percival }}<br>
+
+  <br>
+
+  loyals:  {{ loyal_servants }}<br>
+
+  <br>
+
   minions:  {{ minions_of_mordred }}<br>
+
 {% endblock %}
