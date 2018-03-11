@@ -5,8 +5,12 @@
 
   <h3>current state</h3>
 
+  current_quest: {{ current_quest.pk }}<br>
+  quest_members: {{ current_quest.members }}
+
+  <h3>quests</h3>
+
   {% for quest in quests %}
-    <br>
     num_players: {{ quest.num_players }}<br>
     quest id: {{ quest.id }}
     &ensp;&ensp;&ensp;&ensp;
@@ -36,5 +40,7 @@
   <br>
 
   minions:  {{ minions_of_mordred }}<br>
+
+  <br><br><br><br><br><br><br><br><br><br><br>
 
 {% endblock %}

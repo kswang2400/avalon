@@ -1,15 +1,8 @@
 import random
 
-from game.models import AvalonGame, AvalonGameUser, AvalonUser
-from game.roles import (
-    Assasin,
-    LoyalServant,
-    Merlin,
-    MinionOfMordred,
-    Mordred,
-    Morgana,
-    Percival,
-)
+from game import roles
+from game.models import AvalonGame, AvalonGameUser, AvalonUser, AvalonQuest
+
 
 # KW: TODO figure out roles per num players (default: 6)
 # KW: TODO don't hardcode loyal/minions in base roles
@@ -35,21 +28,6 @@ class Game(object):
     def __init__(self, pk=None, users=None):
         if pk:
             self.game = SavedGame(pk)
-            # try:
-            #     self.game = SavedGame(pk)
-            # except AvalonGame.DoesNotExist:
-            #     # KW: for testing purposes only
-            #     # KW: TODO 404 here instead of creating new game
-            #     # this is bad idea
-            #     self.game = NewGame(
-            #         users=list(AvalonUser.objects.filter(username__in=[
-            #             'kevin',
-            #             'evan',
-            #             'choi',
-            #             'kent',
-            #             'marcus',
-            #             'greg',
-            #         ])))
         else:
             self.game = NewGame(users)
 
@@ -79,6 +57,17 @@ class Game(object):
             debug_context[key] = value
 
         return debug_context
+    
+    def play_current_quest(self):
+        print('starting current quest')
+
+        available_players = self.loyal_servants + self.minions_of_mordred
+        game_users = random.shuffle(available_players)[:self.current_quest.num_players]
+
+        self.current_quest.reset_quest_members(game_users)
+
+        print('finished with current quest')
+        return
 
 class SavedGame(object):
     def __init__(self, pk):
@@ -115,17 +104,19 @@ class NewGame(object):
         self.users = ordered_users_with_roles
 
         self.avalon_game = AvalonGame.create(AvalonGame, self)
+
+        # KW: TODO make this cleaner
         self.pk = self.avalon_game.pk
         self.quests = self.avalon_game.quests
 
         return
 
     def _create_empty_roles(self):
-        self.assasin = Assasin()
-        self.merlin = Merlin()
-        self.mordred = Mordred()
-        self.morgana = Morgana()
-        self.percival = Percival()
+        self.assasin = roles.Assasin()
+        self.merlin = roles.Merlin()
+        self.mordred = roles.Mordred()
+        self.morgana = roles.Morgana()
+        self.percival = roles.Percival()
 
         return
 

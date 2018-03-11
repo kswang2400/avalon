@@ -95,15 +95,34 @@ class AvalonQuest(models.Model):
     game = models.ForeignKey(AvalonGame)
     num_players = models.IntegerField(default=2)
 
-    prev_quest = models.ForeignKey('AvalonQuest', related_name='prev',
-        blank=True, null=True)
-    next_quest = models.ForeignKey('AvalonQuest', related_name='next',
-        blank=True, null=True)
+    prev_quest = models.ForeignKey('AvalonQuest',
+        related_name='prev',
+        blank=True,
+        null=True)
+    next_quest = models.ForeignKey('AvalonQuest',
+        related_name='next',
+        blank=True,
+        null=True)
 
     def __repr__(self):
         return '<AvalonQuest game: {g}, num_players: {n}>'.format(
             g=self.game.pk,
             n=self.num_players)
+
+    @property
+    def is_failed(self):
+        return any(AvalonQuestMember.objects.filter(quest=self
+            ).values_list('vote_pass', flat=True))
+
+    def reset_quest_members(self, game_users):
+        assert len(game_users) == self.num_players, 'quest size is incorrect'
+        # KW: TODO persist previous tries
+        AvalonQuestMember.objects.filter(quest=self).delete()
+
+        for user in game_users:
+            AvalonQuestMember.objects.create(quest=self, member=user)
+
+        return
 
 class AvalonGameUser(models.Model):
     LOYAL_SERVANT = 1
@@ -127,10 +146,14 @@ class AvalonGameUser(models.Model):
     user = models.ForeignKey(AvalonUser)
     game = models.ForeignKey(AvalonGame)
 
-    prev_player = models.ForeignKey('AvalonGameUser', related_name='prev',
-        blank=True, null=True)
-    next_player = models.ForeignKey('AvalonGameUser', related_name='next',
-        blank=True, null=True)
+    prev_player = models.ForeignKey('AvalonGameUser',
+        related_name='prev',
+        blank=True,
+        null=True)
+    next_player = models.ForeignKey('AvalonGameUser',
+        related_name='next',
+        blank=True,
+        null=True)
 
     role = models.CharField(
         max_length=3,
@@ -141,3 +164,10 @@ class AvalonGameUser(models.Model):
         return '<AvalonGameUser game: {g}, user: {u}>'.format(
             g=self.game.pk,
             u=self.user.username)
+
+class AvalonQuestMember(models.Model):
+    quest = models.ForeignKey(AvalonQuest)
+    member = models.ForeignKey(AvalonGameUser)
+    vote_pass = models.BooleanField(default=True)
+
+
