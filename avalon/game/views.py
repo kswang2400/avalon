@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.template import loader
 
 from game.models import AvalonUser, AvalonUserCreationForm
-from game.avalon import AvalonGame
+from game.avalon import Game
 
 def index(request):
     return render(request, 'index.html', {'foo': 'bar'})
@@ -41,6 +41,6 @@ def test_game(request):
         AvalonUser.objects.get(username='greg'),
     ]
 
-    game = AvalonGame(users=fake_users)
+    game = Game(users=fake_users)
 
     return render(request, 'test_game.html', game.get_debug_context())

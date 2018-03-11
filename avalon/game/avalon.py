@@ -1,5 +1,6 @@
 import random
 
+from game.models import AvalonGame
 from game.roles import (
     Assasin,
     LoyalServant,
@@ -10,7 +11,7 @@ from game.roles import (
     Percival,
 )
 
-class AvalonGame(object):
+class Game(object):
     # KW: TODO figure out roles per num players (default: 6)
     # KW: TODO don't hardcode loyal/minions in base roles
     # BASE_ROLES = ['merlin', 'assasin']
@@ -83,7 +84,9 @@ class AvalonGame(object):
         return
 
     def save_game_data(self):
-        pass
+        game = Game.create(self)
+
+        return
 
     def vote_to_go_on_quest(self):
         pass

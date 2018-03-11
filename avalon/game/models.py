@@ -12,12 +12,12 @@ class AvalonUserCreationForm(UserCreationForm):
         model = AvalonUser
         fields = ("username",)
 
-class Game(models.Model):
+class AvalonGame(models.Model):
     creator = models.ForeignKey(AvalonUser)
 
-class Quest(models.Model):
-    game = models.ForeignKey(Game, related_name='quests')
+class AvalonQuest(models.Model):
+    game = models.ForeignKey(AvalonGame, related_name='quests')
 
-class GameUser(models.Model):
+class AvalonGameUser(models.Model):
     user = models.ForeignKey(AvalonUser)
-    game = models.ForeignKey(Game)
+    game = models.ForeignKey(AvalonGame)
