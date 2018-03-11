@@ -32,8 +32,7 @@ class AvalonGame(models.Model):
 
     @property
     def game_users(self):
-        user_ids = AvalonGameUser.objects.filter(game=self).values_list('user_id', flat=True)
-        return AvalonUser.objects.filter(pk__in=user_ids)
+        return AvalonGameUser.objects.filter(game=self)
 
     def create(cls, new_game):
         avalon_game = cls(
@@ -43,11 +42,12 @@ class AvalonGame(models.Model):
         avalon_game.save()
 
         # KW: TODO refactor this out for linking ordered game users
-        users = new_game.users
-        for user in users:
+        users = [x[0] for x in new_game.users]
+        for user, role in new_game.users:
             current_player = AvalonGameUser.objects.create(
                 game=avalon_game,
-                user=user,)
+                user=user,
+                role=role)
 
         for index in range(len(users)):
             prev, curr, nnext = (index - 1) % len(users), index, (index + 1) % len(users)

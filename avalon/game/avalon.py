@@ -1,6 +1,6 @@
 import random
 
-from game.models import AvalonGame, AvalonUser
+from game.models import AvalonGame, AvalonGameUser, AvalonUser
 from game.roles import (
     Assasin,
     LoyalServant,
@@ -15,12 +15,12 @@ from game.roles import (
 # KW: TODO don't hardcode loyal/minions in base roles
 # BASE_ROLES = ['merlin', 'assasin']
 BASE_ROLES = [
-    'merlin',
-    'assasin',
-    'loyal',
-    'loyal',
-    'loyal',
-    'minion',
+    AvalonGameUser.MERLIN,
+    AvalonGameUser.ASSASIN,
+    AvalonGameUser.LOYAL_SERVANT,
+    AvalonGameUser.LOYAL_SERVANT,
+    AvalonGameUser.LOYAL_SERVANT,
+    AvalonGameUser.MINION_OF_MORDRED,
 ]
 CONFIGS = {
     5   : [3, 2, [2, 3, 2, 3, 3], BASE_ROLES],
@@ -95,9 +95,9 @@ class NewGame(object):
         self._create_empty_roles()
 
         roles = self._setup_game_configs(users)
-        ordered_users = self._distribute_roles(users, roles)
+        ordered_users_with_roles = self._distribute_roles(users, roles)
 
-        self.users = ordered_users
+        self.users = ordered_users_with_roles
         self.avalon_game = AvalonGame.create(AvalonGame, self)
 
         return
@@ -127,9 +127,4 @@ class NewGame(object):
         random.shuffle(users)
         random.shuffle(roles)
 
-        index = 0
-        for role in roles:
-            getattr(self, role).set_player(users[index])
-            index += 1
-
-        return users
+        return list(zip(users, roles))
