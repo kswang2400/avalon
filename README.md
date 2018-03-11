@@ -3,7 +3,7 @@
 ### TODOS
 [ ] install shell plus
 [ ] setup real database
-[ ] implement game
+[ ] create game with users (async)
 
 ### optional
 [ ] setup websockets?

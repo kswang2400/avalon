@@ -11,8 +11,17 @@ from game.roles import (
 )
 
 class AvalonGame(object):
-    # KW: TODO figure out roles per num players
-    BASE_ROLES = ['merlin', 'assasin']
+    # KW: TODO figure out roles per num players (default: 6)
+    # KW: TODO don't hardcode loyal/minions in base roles
+    # BASE_ROLES = ['merlin', 'assasin']
+    BASE_ROLES = [
+        'merlin',
+        'assasin',
+        'loyal_1',
+        'loyal_2',
+        'loyal_3',
+        'minion_1',
+    ]
 
     CONFIGS = {
         5   : [3, 2, [2, 3, 2, 3, 3], BASE_ROLES],
@@ -24,10 +33,10 @@ class AvalonGame(object):
     }
 
     def __init__(self, users):
-        self._setup_game_configs(users)
+        roles = self._setup_game_configs(users)
 
         self._create_empty_roles()
-        self._distribute_roles(users)
+        self._distribute_roles(users, roles)
 
         return
 
@@ -52,20 +61,20 @@ class AvalonGame(object):
 
     def _setup_game_configs(self, users):
         self.users = users
-        self.current_mission = 0
+        self.current_quest = 0
 
         (self.num_resistance,
         self.num_spies,
-        self.mission_sizes,
+        self.quest_sizes,
         self.roles) = self.CONFIGS[len(users)]
 
-        return
+        return self.roles
 
-    def _distribute_roles(self, users):
+    def _distribute_roles(self, users, roles):
         random.shuffle(users)
 
         index = 0
-        for role in self.roles:
+        for role in roles:
             getattr(self, role).set_player(users[index])
             index += 1
 
@@ -74,42 +83,36 @@ class AvalonGame(object):
     def vote_to_go_on_quest(self):
         pass
 
-    def print_debug_text(self):
+    def get_debug_context(self):
         debug_fields = [
             'users',
             'num_resistance',
             'num_spies',
-            'mission_sizes',
-            'current_mission',
+            'quest_sizes',
+            'current_quest',
             'roles',
 
-            'break',
             'assasin',
             'merlin',
-            'mordred',
-            'morgana',
-            'percival',
+            # 'mordred',
+            # 'morgana',
+            # 'percival',
 
-            'break',
             'loyal_1',
             'loyal_2',
             'loyal_3',
-            'loyal_4',
+            # 'loyal_4',
 
-            'break',
             'minion_1',
-            'minion_2',
-            'minion_3',
-            'minion_4',
+            # 'minion_2',
+            # 'minion_3',
+            # 'minion_4',
         ]
 
-        debug_text = ''
+        debug_context = {}
         for field_name in debug_fields:
-            if field_name == 'break':
-                debug_text += '<br><br><br>'
-            else:
-                key = field_name
-                value = getattr(self, field_name)
-                debug_text += '{key}: {value}<br>'.format(key=key, value=str(value))
+            key = field_name
+            value = getattr(self, field_name)
+            debug_context[key] = value
 
-        return debug_text
+        return debug_context

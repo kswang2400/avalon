@@ -43,4 +43,4 @@ def test_game(request):
 
     game = AvalonGame(users=fake_users)
 
-    return HttpResponse(game.print_debug_text())
+    return render(request, 'test_game.html', game.get_debug_context())
