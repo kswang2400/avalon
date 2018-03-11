@@ -52,20 +52,18 @@ class AvalonGame(models.Model):
             current_quest=new_game.current_quest)
         avalon_game.save()
 
-        print('\n\navalonguser new game users\n\n')
-        print(new_game.users)
-        print(len(new_game.users))
-        print('\n\n')
-
-        for user in new_game.users:
+        # KW: TODO refactor this out for linking ordered game users
+        users = new_game.users
+        for user in users:
             current_player = AvalonGameUser.objects.create(
                 game=avalon_game,
                 user=user)
 
-        for index in range(len(new_game.users)):
-            prev, curr, nnext = (index - 1) % len(new_game.users), index, (index + 1) % len(new_game.users)
-            print('\n\n{p}\n{c}\n{n}\n\n'.format(p=prev, c=curr, n=nnext))
-            prev, curr, nnext = new_game.users[prev], new_game.users[curr], new_game.users[nnext]
+        for index in range(len(users)):
+            prev, curr, nnext = (index - 1) % len(users), index, (index + 1) % len(users)
+            prev = AvalonGameUser.objects.get(user=users[prev])
+            curr = AvalonGameUser.objects.get(user=users[curr])
+            nnext = AvalonGameUser.objects.get(user=users[nnext])
 
             prev.next_player = curr
             curr.prev_player = prev
@@ -87,3 +85,6 @@ class AvalonGameUser(models.Model):
 
     prev_player = models.ForeignKey('AvalonGameUser', related_name='prev', blank=True, null=True)
     next_player = models.ForeignKey('AvalonGameUser', related_name='next', blank=True, null=True)
+
+    def __repr__(self):
+        return '<AvalonGameUser game: {g}, user: {u}>'.format(g=self.game.pk, u=self.user.username)
