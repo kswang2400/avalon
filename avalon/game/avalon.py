@@ -17,10 +17,10 @@ from game.roles import (
 BASE_ROLES = [
     'merlin',
     'assasin',
-    'loyal_1',
-    'loyal_2',
-    'loyal_3',
-    'minion_1',
+    'loyal',
+    'loyal',
+    'loyal',
+    'minion',
 ]
 CONFIGS = {
     5   : [3, 2, [2, 3, 2, 3, 3], BASE_ROLES],
@@ -56,21 +56,11 @@ class Game(object):
             'quest_sizes',
             'current_quest',
 
-            'assasin',
-            'merlin',
+            # 'assasin',
+            # 'merlin',
             # 'mordred',
             # 'morgana',
             # 'percival',
-
-            'loyal_1',
-            'loyal_2',
-            'loyal_3',
-            # 'loyal_4',
-
-            'minion_1',
-            # 'minion_2',
-            # 'minion_3',
-            # 'minion_4',
         ]
 
         debug_context = {}
@@ -94,21 +84,11 @@ class SavedGame(object):
         self.quest_sizes,
         self.roles) = CONFIGS[len(self.users)]
 
-        self.assasin = saved_game.assasin
-        self.merlin = saved_game.merlin
-        self.mordred = saved_game.mordred
-        self.morgana = saved_game.morgana
-        self.percival = saved_game.percival
-
-        self.loyal_1 = saved_game.loyal_1
-        self.loyal_2 = saved_game.loyal_2
-        self.loyal_3 = saved_game.loyal_3
-        self.loyal_4 = saved_game.loyal_4
-
-        self.minion_1 = saved_game.minion_1
-        self.minion_2 = saved_game.minion_2
-        self.minion_3 = saved_game.minion_3
-        self.minion_4 = saved_game.minion_4
+        # self.assasin = saved_game.assasin
+        # self.merlin = saved_game.merlin
+        # self.mordred = saved_game.mordred
+        # self.morgana = saved_game.morgana
+        # self.percival = saved_game.percival
 
 class NewGame(object):
     def __init__(self, users):
@@ -129,22 +109,12 @@ class NewGame(object):
         self.morgana = Morgana()
         self.percival = Percival()
 
-        self.loyal_1 = LoyalServant()
-        self.loyal_2 = LoyalServant()
-        self.loyal_3 = LoyalServant()
-        self.loyal_4 = LoyalServant()
-
-        self.minion_1 = MinionOfMordred()
-        self.minion_2 = MinionOfMordred()
-        self.minion_3 = MinionOfMordred()
-        self.minion_4 = MinionOfMordred()
-
         return
 
     def _setup_game_configs(self, users):
         self.user = users[0]
         self.users = users
-        self.current_quest = 0
+        self.current_quest = 1
 
         (self.num_resistance,
         self.num_spies,

@@ -31,6 +31,7 @@ def signup(request):
 
 
 def test_game(request, pk):
-    game = Game(pk=pk)
+    # KW: TODO urls game pk parsing is wonky
+    game = Game(pk=18)
 
     return render(request, 'test_game.html', game.get_debug_context())

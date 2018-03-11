@@ -16,40 +16,30 @@ class AvalonGame(models.Model):
     ]
 
     user = models.ForeignKey(AvalonUser, related_name='user')
-    quest_master = models.ForeignKey(AvalonUser, related_name='quest_master', blank=True, null=True)
+    quest_master = models.ForeignKey('AvalonGameUser', related_name='quest_master', blank=True, null=True)
     current_quest = models.CharField(
         max_length=1,
         choices=QUEST_CHOICES,
         default='1')
 
-    assasin = models.ForeignKey(AvalonUser, related_name='assasin', blank=True, null=True)
-    merlin = models.ForeignKey(AvalonUser, related_name='merlin', blank=True, null=True)
-    mordred = models.ForeignKey(AvalonUser, related_name='mordred', blank=True, null=True)
-    morgana = models.ForeignKey(AvalonUser, related_name='morgana', blank=True, null=True)
-    percival = models.ForeignKey(AvalonUser, related_name='percival', blank=True, null=True)
-
-    loyal_1 = models.ForeignKey(AvalonUser, related_name='loyal_1', blank=True, null=True)
-    loyal_2 = models.ForeignKey(AvalonUser, related_name='loyal_2', blank=True, null=True)
-    loyal_3 = models.ForeignKey(AvalonUser, related_name='loyal_3', blank=True, null=True)
-    loyal_4 = models.ForeignKey(AvalonUser, related_name='loyal_4', blank=True, null=True)
-
-    minion_1 = models.ForeignKey(AvalonUser, related_name='minion_1', blank=True, null=True)
-    minion_2 = models.ForeignKey(AvalonUser, related_name='minion_2', blank=True, null=True)
-    minion_3 = models.ForeignKey(AvalonUser, related_name='minion_3', blank=True, null=True)
-    minion_4 = models.ForeignKey(AvalonUser, related_name='minion_4', blank=True, null=True)
-
     def __repr__(self):
-        return '<AvalonGame users: {u}>'.format(u=self.users)
+        return '<AvalonGame users: {u}>'.format(u=self.users.values_list('username', flat=True))
 
     @property
     def users(self):
-        user_ids = AvalonGameUser.objects.filter(game=self).values_list('id', flat=True)
+        user_ids = AvalonGameUser.objects.filter(game=self).values_list('user_id', flat=True)
+        return AvalonUser.objects.filter(pk__in=user_ids)
+
+    @property
+    def game_users(self):
+        user_ids = AvalonGameUser.objects.filter(game=self).values_list('user_id', flat=True)
         return AvalonUser.objects.filter(pk__in=user_ids)
 
     def create(cls, new_game):
         avalon_game = cls(
             user=new_game.user,
-            current_quest=new_game.current_quest)
+            current_quest=new_game.current_quest,
+        )
         avalon_game.save()
 
         # KW: TODO refactor this out for linking ordered game users
@@ -57,13 +47,13 @@ class AvalonGame(models.Model):
         for user in users:
             current_player = AvalonGameUser.objects.create(
                 game=avalon_game,
-                user=user)
+                user=user,)
 
         for index in range(len(users)):
             prev, curr, nnext = (index - 1) % len(users), index, (index + 1) % len(users)
-            prev = AvalonGameUser.objects.get(user=users[prev])
-            curr = AvalonGameUser.objects.get(user=users[curr])
-            nnext = AvalonGameUser.objects.get(user=users[nnext])
+            prev = AvalonGameUser.objects.get(game=avalon_game, user=users[prev])
+            curr = AvalonGameUser.objects.get(game=avalon_game, user=users[curr])
+            nnext = AvalonGameUser.objects.get(game=avalon_game, user=users[nnext])
 
             prev.next_player = curr
             curr.prev_player = prev
@@ -80,11 +70,34 @@ class AvalonQuest(models.Model):
     game = models.ForeignKey(AvalonGame, related_name='game')
 
 class AvalonGameUser(models.Model):
+    LOYAL_SERVANT = 1
+    MINION_OF_MORDRED = 2
+    ASSASIN = 3
+    MERLIN = 4
+    MORGANA = 5
+    MORDRED = 6
+    PERCIVAL = 7
+
+    GAME_ROLES = (
+        (LOYAL_SERVANT, LOYAL_SERVANT),
+        (MINION_OF_MORDRED, MINION_OF_MORDRED),
+        (ASSASIN, ASSASIN),
+        (MERLIN, MERLIN),
+        (MORGANA, MORGANA),
+        (MORDRED, MORDRED),
+        (PERCIVAL, PERCIVAL),
+    )
+
     user = models.ForeignKey(AvalonUser)
     game = models.ForeignKey(AvalonGame)
 
     prev_player = models.ForeignKey('AvalonGameUser', related_name='prev', blank=True, null=True)
     next_player = models.ForeignKey('AvalonGameUser', related_name='next', blank=True, null=True)
+
+    role = models.CharField(
+        max_length=3,
+        choices=GAME_ROLES,
+        default=LOYAL_SERVANT)
 
     def __repr__(self):
         return '<AvalonGameUser game: {g}, user: {u}>'.format(g=self.game.pk, u=self.user.username)
