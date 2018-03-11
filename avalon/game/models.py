@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class AvalonUser(AbstractUser):
     def __repr__(self):
-        return self.username
+        return '<AvalonUser user: {u}>'.format(u=self.username)
 
 class AvalonGame(models.Model):
     QUEST_CHOICES = [
@@ -15,7 +15,8 @@ class AvalonGame(models.Model):
         ('5', '5'),
     ]
 
-    user = models.ForeignKey(AvalonUser)
+    user = models.ForeignKey(AvalonUser, related_name='user')
+    quest_master = models.ForeignKey(AvalonUser, related_name='quest_master', blank=True, null=True)
     current_quest = models.CharField(
         max_length=1,
         choices=QUEST_CHOICES,
@@ -37,17 +38,24 @@ class AvalonGame(models.Model):
     minion_3 = models.ForeignKey(AvalonUser, related_name='minion_3', blank=True, null=True)
     minion_4 = models.ForeignKey(AvalonUser, related_name='minion_4', blank=True, null=True)
 
+    def __repr__(self):
+        return '<AvalonGame users: {u}>'.format(u=self.users)
 
     @property
     def users(self):
         user_ids = AvalonGameUser.objects.filter(game=self).values_list('id', flat=True)
         return AvalonUser.objects.filter(pk__in=user_ids)
 
-    @classmethod
     def create(cls, new_game):
         avalon_game = cls(
             user=new_game.user,
             current_quest=new_game.current_quest)
+        avalon_game.save()
+
+        print('\n\navalonguser new game users\n\n')
+        print(new_game.users)
+        print(len(new_game.users))
+        print('\n\n')
 
         for user in new_game.users:
             current_player = AvalonGameUser.objects.create(
@@ -77,5 +85,5 @@ class AvalonGameUser(models.Model):
     user = models.ForeignKey(AvalonUser)
     game = models.ForeignKey(AvalonGame)
 
-    prev_player = models.ForeignKey('AvalonGameUser', related_name='prev')
-    next_player = models.ForeignKey('AvalonGameUser', related_name='next')
+    prev_player = models.ForeignKey('AvalonGameUser', related_name='prev', blank=True, null=True)
+    next_player = models.ForeignKey('AvalonGameUser', related_name='next', blank=True, null=True)

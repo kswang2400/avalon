@@ -1,6 +1,6 @@
 import random
 
-from game.models import AvalonGame
+from game.models import AvalonGame, AvalonUser
 from game.roles import (
     Assasin,
     LoyalServant,
@@ -34,7 +34,18 @@ CONFIGS = {
 class Game(object):
     def __init__(self, pk=None, users=None):
         if pk:
-            self.game = SavedGame(pk)
+            try:
+                self.game = SavedGame(pk)
+            except AvalonGame.DoesNotExist:
+                self.game = NewGame(
+                    users=list(AvalonUser.objects.filter(username__in=[
+                        'kevin',
+                        'evan',
+                        'choi',
+                        'kent',
+                        'marcus',
+                        'greg',
+                    ])))
         else:
             self.game = NewGame(users)
 
@@ -107,7 +118,7 @@ class NewGame(object):
         ordered_users = self._distribute_roles(users, roles)
 
         self.users = ordered_users
-        self.avalon_game = AvalonGame.create(self)
+        self.avalon_game = AvalonGame.create(AvalonGame, self)
 
         return
 
