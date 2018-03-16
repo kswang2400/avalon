@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '34.212.31.133', # KW: this is foobar
+    '127.0.0.1',
 ]
 
 
