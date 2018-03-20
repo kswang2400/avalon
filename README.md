@@ -12,5 +12,10 @@ psql --u postgres
 
 nginx.conf
 
-on mac: `/usr/local/etc/nginx/nginx.conf`
-on linux: '/etc/nginx/nginx.conf
+on mac:
+    `/usr/local/etc/nginx/nginx.conf`
+    `sudo nginx`
+
+on linux:
+    `/etc/nginx/nginx.conf`
+    `sudo service nginx start|stop|restart`
