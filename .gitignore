@@ -4,3 +4,5 @@
 **/migrations/
 
 env.sh
+
+.DS_Store
