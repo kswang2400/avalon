@@ -13,7 +13,8 @@ python manage.py shell
 # nginx
 nginx -c /usr/local/etc/nginx/nginx.conf
 nginx -s start|restart|stop
-sudo lsof -i:80
+lsof -i:80
+/usr/local/var/run/nginx.pid
 
 
 # TODO
@@ -24,8 +25,17 @@ nginx.conf
 
 on mac:
     `/usr/local/etc/nginx/nginx.conf`
-    `sudo nginx`
+    `nginx -h|-c|-s`
 
 on linux:
     `/etc/nginx/nginx.conf`
-    `sudo service nginx start|stop|restart`
+    `service nginx start|stop|restart`
+
+
+# install nginx on your local server
+on mac:
+```
+brew install nginx
+cp nginx.conf /usr/local/etc/nginx/nginx.conf
+sudo nginx
+```
