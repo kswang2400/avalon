@@ -1,3 +1,6 @@
+[play some avalon!](http://34.212.31.133/)
+
+
 
 ```
 # virtualenv
@@ -20,30 +23,22 @@ lsof -i:80
 
 # TODO
 psql --u postgres
-```
 
-nginx.conf
-
+# nginx.conf
 on mac:
-    `/usr/local/etc/nginx/nginx.conf`
-    `nginx -h|-c|-s`
+    /usr/local/etc/nginx/nginx.conf
+    nginx -h|-c|-s
 
 on linux:
-    `/etc/nginx/nginx.conf`
-    `service nginx start|stop|restart`
-
+    /etc/nginx/nginx.conf
+    service nginx start|stop|restart
 
 # install nginx on your local server
 on mac:
-```
-brew install nginx
-cp nginx.conf /usr/local/etc/nginx/nginx.conf
-sudo nginx
-```
+    brew install nginx
+    cp nginx.conf /usr/local/etc/nginx/nginx.conf
+    sudo nginx
 
 on linux:
+    sudo yum install nginx
 ```
-sudo yum install nginx
-```
-
-`ssh -i pem/kwang_avalon.pem ec2-user@ec2-34-212-31-133.us-west-2.compute.amazonaws.com`
