@@ -4,6 +4,7 @@
 mkvirtualenv --python=/usr/bin/python3 avalon
 workon avalon
 virtualenv -p python3 avalon
+source /home/ec2-user/venv/avalon/bin/activate
 
 # python
 pip install -r requirements.txt
@@ -39,3 +40,10 @@ brew install nginx
 cp nginx.conf /usr/local/etc/nginx/nginx.conf
 sudo nginx
 ```
+
+on linux:
+```
+sudo yum install nginx
+```
+
+`ssh -i pem/kwang_avalon.pem ec2-user@ec2-34-212-31-133.us-west-2.compute.amazonaws.com`
