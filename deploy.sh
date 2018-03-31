@@ -2,6 +2,9 @@
 
 # preamble
 sudo service nginx stop
+touch /tmp/avalon_uwsgi.pid
+uwsgi --stop /tmp/avalon_uwsgi.pid
+source /home/ec2-user/venv/avalon/bin/activate
 
 # update codebase
 # KW: TODO status checks
@@ -13,5 +16,7 @@ git merge origin master
 
 # run uwsgi
 # KW: TODO set up uwsgi emperor for zero downtime
-uwsgi --ini prod.ini
-sudo service nginx start
+uwsgi="uwsgi --ini uwsgi_ini/prod.ini"
+nginx="sudo service nginx start"
+
+$nginx & $uwsgi
