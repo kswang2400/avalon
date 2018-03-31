@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Avalon game {{ pk }}</h3>
+
+<div id="page">
+  <div id="game-contents">
+    <div class="actions">
+      <form action="/suggest/" method="POST">
+        {% csrf_token %}
+        <label for="reset_quest_members">Who should go on this quest?</label>
+        <br><br>
+        {% for game_user in game_users %}
+          <input
+            type="checkbox"
+            id={{ game_user.pk }}
+            name="users"
+            value={{ game_user.pk }}>
+          <label for={{ game_user.pk }}>{{ game_user.user.username }}</label>
+          <br>
+        {% endfor %}
+        <br>
+        <input type="text" name="game_pk" value={{ pk }} hidden />
+        <input type="submit" value="Pick your crew" />
+      </form>
+      <br>
+      <form action="/mock_vote_for_quest/" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Mock votes for quest" />
+      </form>
+    </div>
+    <div class="current-state">
+      <h3>current state</h3>
+
+      current_quest: {{ current_quest.pk }}<br>
+      quest_master: {{ quest_master.user.username }}<br>
+
+      quest_members:
+      {% for m in current_quest.members %}
+        <a>{{ m.member.user.username }}, </a>
+      {% endfor %}<br>
+
+      passed?: {{ current_quest.is_successful }}<br>
+    </div>
+  </div>
+
+  <div id="quests-container"?>
+    <h3>quests</h3>
+    <div id="quests-metadata">
+      {% for quest in quests %}
+        <div class="quest-metadata">
+          <h3>{{ quest.pk }}</h3>
+          num_players: {{ quest.num_players }}<br>
+          quest id: {{ quest.id }}<br><br>
+
+          {% for username, vote in quest.votes_for_quest %}
+            <div class="votes-for-quest">
+              <a>{{ username }}</a><a>{{ vote }}</a>
+            </div>
+          {% endfor %}<br>
+          quest is approved: {{ quest.is_approved }}<br><br>
+
+          {% for username, vote in quest.votes_on_quest %}
+            {{ username }}: {{ vote }}<br>
+          {% endfor %}<br>
+          quest is successful: {{ quest.is_successful }}<br><br>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

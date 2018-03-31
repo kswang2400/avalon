@@ -29,11 +29,18 @@ def signup(request):
 
     return render(request, 'signup.html', {'form': form})
 
+def game(request, pk):
+    if request.GET.get('debug'):
+        return debug_game(request, pk)
 
-def test_game(request, pk):
     game = Game(pk=pk)
 
-    return render(request, 'test_game.html', game.get_debug_context())
+    return render(request, 'game.html', game.get_debug_context())
+
+def debug_game(request, pk):
+    game = Game(pk=pk)
+
+    return render(request, 'debug_game.html', game.get_debug_context())
 
 def mock_vote_for_quest(request):
     if request.method == 'GET':
@@ -45,9 +52,11 @@ def mock_vote_for_quest(request):
     game = Game(pk=8)
     game.mock_game_user_quest_member_votes()
 
-    return HttpResponseRedirect(reverse('test_game', args=[game.game.pk]))
+    return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
 
 def questmaster_suggest(request):
+    if request.method == 'GET':
+        return HttpResponseRedirect(reverse('index'))
 
     game_pk = int(request.POST.get('game_pk'))
     member_ids = list(map(int, request.POST.getlist('users')))
@@ -55,4 +64,4 @@ def questmaster_suggest(request):
     game = Game(pk=game_pk)
     game.game.current_quest.reset_members(member_ids)
 
-    return HttpResponseRedirect(reverse('test_game', args=[game.game.pk]))
+    return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
