@@ -58,15 +58,10 @@ class Game(object):
 
         return debug_context
     
-    def play_current_quest(self):
-        print('starting current quest')
+    def mock_game_user_quest_member_votes(self):
+        for game_user in self.game.game_users:
+            game_user.vote_for_quest(bool(random.randint(0, 1)))
 
-        available_players = self.loyal_servants + self.minions_of_mordred
-        game_users = random.shuffle(available_players)[:self.current_quest.num_players]
-
-        self.current_quest.reset_quest_members(game_users)
-
-        print('finished with current quest')
         return
 
 class SavedGame(object):

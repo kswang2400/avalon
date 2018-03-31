@@ -35,9 +35,19 @@ def test_game(request, pk):
 
     return render(request, 'test_game.html', game.get_debug_context())
 
-def questmaster_suggest(request):
+def mock_vote_for_quest(request):
     if request.method == 'GET':
         return HttpResponseRedirect(reverse('index'))
+
+    # KW: TODO this is for mocking anyways
+    # game_pk = int(request.POST.get('game_pk'))
+
+    game = Game(pk=8)
+    game.mock_game_user_quest_member_votes()
+
+    return HttpResponseRedirect(reverse('test_game', args=[game.game.pk]))
+
+def questmaster_suggest(request):
 
     game_pk = int(request.POST.get('game_pk'))
     member_ids = list(map(int, request.POST.getlist('users')))

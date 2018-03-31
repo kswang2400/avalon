@@ -114,8 +114,31 @@ class AvalonQuest(models.Model):
             n=self.num_players)
 
     @property
+    def votes_for_quest(self):
+        game_users = self.game.game_users
+        quest_votes = AvalonQuestVote.objects.filter(
+            quest=self,
+            game_user__in=game_users)
+        return quest_votes.values_list('game_user__user__username', 'vote')
+
+    @property
+    def votes_on_quest(self):
+        return self.members.values_list('member__user__username', 'vote')
+
+    @property
+    def is_approved(self):
+        votes_for_quest =self.votes_for_quest
+        if (len(votes_for_quest)) == 0:
+            return False
+
+        approval_votes = len([vote for _, vote in votes_for_quest if vote ])
+        denial_votes = len([vote for _, vote in votes_for_quest if not vote ])
+
+        return (approval_votes / len(votes_for_quest)) > 0.5
+
+    @property
     def is_successful(self):
-        return all(self.members.values_list('vote_pass', flat=True))
+        return all([vote for username, vote in self.votes_on_quest])
 
     @property
     def members(self):
@@ -167,6 +190,16 @@ class AvalonGameUser(models.Model):
         choices=GAME_ROLES,
         default=LOYAL_SERVANT)
 
+    def vote_for_quest(self, vote):
+        quest_vote, created = AvalonQuestVote.objects.get_or_create(
+            quest=self.game.current_quest,
+            game_user=self)
+
+        quest_vote.vote = vote
+        quest_vote.save()
+
+        return
+
     def __repr__(self):
         return '<AvalonGameUser game: {g}, user: {u} id: {i}>'.format(
             g=self.game.pk,
@@ -176,7 +209,7 @@ class AvalonGameUser(models.Model):
 class AvalonQuestMember(models.Model):
     quest = models.ForeignKey(AvalonQuest)
     member = models.ForeignKey(AvalonGameUser)
-    vote_pass = models.BooleanField(default=True)
+    vote = models.BooleanField(default=True)
 
     def __repr__(self):
         if self.member and self.member.user:
@@ -189,5 +222,10 @@ class AvalonQuestMember(models.Model):
             q=self.quest.pk,
             i=self.pk)
 
-
-
+class AvalonQuestVote(models.Model):
+    """
+    whether or note a game_user voted yes or no on a group to go on a quest
+    """
+    quest = models.ForeignKey(AvalonQuest)
+    game_user = models.ForeignKey(AvalonGameUser)
+    vote = models.BooleanField(default=False)

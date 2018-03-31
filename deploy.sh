@@ -14,6 +14,12 @@ git checkout master
 git fetch
 git merge origin master
 
+# migrate
+# KW: TODO better granularity here, migrations are hard
+# KW: TODO uncomment this when we actually use a real db
+# python manage.py makemigrations
+# python manage.py migrate
+
 # run uwsgi
 # KW: TODO set up uwsgi emperor for zero downtime
 uwsgi="uwsgi --ini uwsgi_ini/prod.ini"
