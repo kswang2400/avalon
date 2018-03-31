@@ -2,6 +2,39 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="/static/style.css" />
+    <style>
+#page {
+    display: inline-flex;
+}
+
+#game-contents {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#quests-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#quests-metadata {
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.quest-metadata {
+    padding: 8px;
+}
+
+.votes-for-quest {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+    </style>
     <title>{% block title %}Avalon{% endblock %}</title>
 </head>
 
