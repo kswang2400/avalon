@@ -30,17 +30,10 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def game(request, pk):
-    if request.GET.get('debug'):
-        return debug_game(request, pk)
-
+    debug = request.GET.get('debug') == 'true'
     game = Game(pk=pk)
 
-    return render(request, 'game.html', game.get_debug_context())
-
-def debug_game(request, pk):
-    game = Game(pk=pk)
-
-    return render(request, 'debug_game.html', game.get_debug_context())
+    return render(request, 'game.html', game.get_debug_context(debug=debug))
 
 def mock_vote_for_quest(request):
     if request.method == 'GET':

@@ -3,8 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class AvalonUser(AbstractUser):
-    def __repr__(self):
-        return '<AvalonUser user: {u}>'.format(u=self.username)
+    pass
 
 class AvalonGame(models.Model):
     user = models.ForeignKey(AvalonUser, related_name='user')
@@ -16,10 +15,6 @@ class AvalonGame(models.Model):
         related_name='current_quest',
         blank=True,
         null=True)
-
-    def __repr__(self):
-        return '<AvalonGame users: {u}>'.format(
-            u=self.users.values_list('username', flat=True))
 
     @property
     def users(self):
@@ -108,11 +103,6 @@ class AvalonQuest(models.Model):
         blank=True,
         null=True)
 
-    def __repr__(self):
-        return '<AvalonQuest game: {g}, num_players: {n}>'.format(
-            g=self.game.pk,
-            n=self.num_players)
-
     @property
     def votes_for_quest(self):
         game_users = self.game.game_users
@@ -200,27 +190,10 @@ class AvalonGameUser(models.Model):
 
         return
 
-    def __repr__(self):
-        return '<AvalonGameUser game: {g}, user: {u} id: {i}>'.format(
-            g=self.game.pk,
-            u=self.user.username,
-            i=self.pk)
-
 class AvalonQuestMember(models.Model):
     quest = models.ForeignKey(AvalonQuest)
     member = models.ForeignKey(AvalonGameUser)
     vote = models.BooleanField(default=True)
-
-    def __repr__(self):
-        if self.member and self.member.user:
-            user_name = self.member.user.username
-        else:
-            user_name = 'no one'
-
-        return '<AvalonQuestMember user: {u}, quest: {q} id={i}>'.format(
-            u=user_name,
-            q=self.quest.pk,
-            i=self.pk)
 
 class AvalonQuestVote(models.Model):
     """

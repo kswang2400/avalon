@@ -28,7 +28,7 @@ class Game(object):
     def __init__(self, pk=None, users=None):
         self.game = SavedGame(pk) if pk else NewGame(users)
 
-    def get_debug_context(self):
+    def get_debug_context(self, debug=False):
         debug_fields = [
             'pk',
             'users',
@@ -50,7 +50,9 @@ class Game(object):
             'game_users',
         ]
 
-        debug_context = {}
+        debug_context = {
+            'debug': debug,
+        }
         for field_name in debug_fields:
             key = field_name
             value = getattr(self.game, field_name)

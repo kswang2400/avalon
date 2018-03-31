@@ -68,5 +68,36 @@
       {% endfor %}
     </div>
   </div>
+
+  {% if debug %}
+    <div class="metadata">
+      <h3>game metadata</h3>
+      id: {{ pk }}<br>
+
+      users:
+      {% for u in users %}
+        <a>{{ u.username }}, </a>
+      {% endfor %}<br>
+
+      quest_sizes:  {{ quest_sizes }}<br>
+      current_quest:  {{ current_quest.pk }}<br><br>
+
+      assasin:  {{ assasin }}<br>
+      merlin:  {{ merlin }}<br>
+      mordred:  {{ mordred }}<br>
+      morgana:  {{ morgana }}<br>
+      percival:  {{ percival }}<br><br>
+
+      loyals:
+      {% for s in loyal_servants %}
+        <a>{{ s.user.username }}, </a>
+      {% endfor %}<br><br>
+
+      minions:
+      {% for s in minions_of_mordred %}
+        <a>{{ s.user.username }}, </a>
+      {% endfor %}<br>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
