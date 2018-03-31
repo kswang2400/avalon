@@ -1,8 +1,9 @@
+.coverage
+.DS_Store
+env.sh
+
 *.sqlite3
 *.pyc
 
 **/migrations/
-
-env.sh
-
-.DS_Store
+**/.cache/

@@ -115,16 +115,19 @@ class AvalonQuest(models.Model):
 
     @property
     def is_successful(self):
-        return all(AvalonQuestMember.objects.filter(quest=self
-            ).values_list('vote_pass', flat=True))
+        return all(self.members.values_list('vote_pass', flat=True))
 
-    def reset_quest_members(self, game_users):
-        assert len(game_users) == self.num_players, 'quest size is incorrect'
+    @property
+    def members(self):
+        return AvalonQuestMember.objects.filter(quest=self)
+
+    def reset_members(self, game_user_ids):
+        assert len(game_user_ids) == self.num_players, 'quest size is incorrect'
         # KW: TODO persist previous tries
         AvalonQuestMember.objects.filter(quest=self).delete()
 
-        for user in game_users:
-            AvalonQuestMember.objects.create(quest=self, member=user)
+        for user_id in game_user_ids:
+            AvalonQuestMember.objects.create(quest=self, member_id=user_id)
 
         return
 
@@ -165,13 +168,26 @@ class AvalonGameUser(models.Model):
         default=LOYAL_SERVANT)
 
     def __repr__(self):
-        return '<AvalonGameUser game: {g}, user: {u}>'.format(
+        return '<AvalonGameUser game: {g}, user: {u} id: {i}>'.format(
             g=self.game.pk,
-            u=self.user.username)
+            u=self.user.username,
+            i=self.pk)
 
 class AvalonQuestMember(models.Model):
     quest = models.ForeignKey(AvalonQuest)
     member = models.ForeignKey(AvalonGameUser)
     vote_pass = models.BooleanField(default=True)
+
+    def __repr__(self):
+        if self.member and self.member.user:
+            user_name = self.member.user.username
+        else:
+            user_name = 'no one'
+
+        return '<AvalonQuestMember user: {u}, quest: {q} id={i}>'.format(
+            u=user_name,
+            q=self.quest.pk,
+            i=self.pk)
+
 
 

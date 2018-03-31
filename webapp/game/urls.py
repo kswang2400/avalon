@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
-from . import views
+from game import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^signup/$', views.signup, name='signup'),
     # KW: TODO better game pk parsing
     url(r'^test_game/([0-9])/$', views.test_game, name='test_game'),
+    url(r'^suggest/$', views.questmaster_suggest, name='questmaster_suggest')
 ]

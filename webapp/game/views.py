@@ -31,7 +31,18 @@ def signup(request):
 
 
 def test_game(request, pk):
-    # KW: TODO urls game pk parsing is wonky
-    game = Game(pk=8)
+    game = Game(pk=pk)
 
     return render(request, 'test_game.html', game.get_debug_context())
+
+def questmaster_suggest(request):
+    if request.method == 'GET':
+        return HttpResponseRedirect(reverse('index'))
+
+    game_pk = int(request.POST.get('game_pk'))
+    member_ids = list(map(int, request.POST.getlist('users')))
+
+    game = Game(pk=game_pk)
+    game.game.current_quest.reset_members(member_ids)
+
+    return HttpResponseRedirect(reverse('test_game', args=[game.game.pk]))

@@ -46,6 +46,8 @@ class Game(object):
 
             'quests',
             'quest_master',
+
+            'game_users',
         ]
 
         debug_context = {}
@@ -92,6 +94,7 @@ class SavedGame(object):
 
         self.quests = self.avalon_game.quests
         self.quest_master = self.avalon_game.quest_master
+        self.game_users = self.avalon_game.game_users
 
 class NewGame(object):
     def __init__(self, users):
@@ -108,6 +111,7 @@ class NewGame(object):
         self.pk = self.avalon_game.pk
         self.quests = self.avalon_game.quests
         self.quest_master = self.avalon_game.quest_master
+        self.game_users = self.avalon_game.game_users
 
         return
 
