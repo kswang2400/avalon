@@ -3,6 +3,9 @@
 
 
 ```
+# testing
+pytest --cov=game
+
 # virtualenv
 mkvirtualenv --python=/usr/bin/python3 avalon
 workon avalon
@@ -20,8 +23,7 @@ nginx -s start|restart|stop
 lsof -i:80
 /usr/local/var/run/nginx.pid
 
-
-# TODO
+# postgres
 psql --u postgres
 
 # nginx.conf

@@ -1,0 +1,13 @@
+language: python
+
+python:
+  - 3.6
+
+before_script:
+  - cd webapp
+
+install:
+  - pip install -r webapp/requirements.txt
+
+script:
+  - pytest --cov=game

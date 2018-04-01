@@ -4,7 +4,7 @@ django-extensions
 ipdb
 ipython
 psycopg2==2.7.3
-pytest
+pytest-django
 pytest-cov
 python-coveralls
 Werkzeug

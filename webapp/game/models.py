@@ -58,6 +58,7 @@ class AvalonGame(models.Model):
         return
 
     def handle_vote_on_quest(self, user, vote):
+        # KW: TODO there should be validation that user here is on the quest
         quest_user = AvalonGameUser.objects.get(game=self, user=user)
         quest_member = AvalonQuestMember.objects.get(
             quest=self.current_quest,
@@ -103,9 +104,9 @@ class AvalonGame(models.Model):
                 role=role)
 
         for index in range(len(users)):
-            prev = self.game_users.filter(user=users[(index - 1) % len(users)])
-            curr = self.game_users.filter(user=users[index])
-            nex = self.game_users.filter(user=users[(index + 1) % len(users)])
+            prev = avalon_game.game_users.get(user=users[(index - 1) % len(users)])
+            curr = avalon_game.game_users.get(user=users[index])
+            nex = avalon_game.game_users.get(user=users[(index + 1) % len(users)])
 
             prev.next_player = curr
             curr.prev_player = prev
