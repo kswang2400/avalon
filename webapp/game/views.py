@@ -36,6 +36,18 @@ def game(request, pk):
 
     return render(request, 'game.html', game.get_debug_context(debug=debug))
 
+def finalize_quest(request):
+    # KW: this should be a POST handler decorator
+    if request.method == 'GET':
+        return HttpResponseRedirect(reverse('index'))
+
+    game_pk = int(request.POST.get('game_pk'))
+    game = Game(pk=game_pk)
+
+    game.game.avalon_game.finalize_quest()
+
+    return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
+
 def vote_on_quest(request):
     # KW: this should be a POST handler decorator
     if request.method == 'GET':

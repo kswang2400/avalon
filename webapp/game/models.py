@@ -50,6 +50,12 @@ class AvalonGame(models.Model):
 
         return ordered_quests
 
+    def finalize_quest(self):
+        self.current_quest = self.current_quest.next_quest
+        self.save()
+
+        return
+
     def handle_vote_for_quest(self):
         if not self.current_quest.is_approved:
             self.quest_master = self.quest_master.next_player

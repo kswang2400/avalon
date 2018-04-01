@@ -39,6 +39,12 @@
         <input type="text" name="game_pk" value={{ pk }} hidden />
         <input type="submit" value="Vote on quest" />
       </form><br>
+
+      <form action="/quest/finalize/" method="POST">
+        {% csrf_token %}
+        <input type="text" name="game_pk" value={{ pk }} hidden />
+        <input type="submit" value="Finalize quest" />
+      </form>
     </div>
 
 
