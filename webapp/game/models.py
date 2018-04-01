@@ -43,8 +43,9 @@ class AvalonGame(models.Model):
     @property
     def quests(self):
         ordered_quests = []
+
         current_quest = self.first_quest
-        while current_quest is not None:
+        for _ in range(5):
             ordered_quests.append(current_quest)
             current_quest = current_quest.next_quest
 
@@ -93,11 +94,13 @@ class AvalonGame(models.Model):
                 avalon_game.first_quest = quest
                 avalon_game.save()
                 quest.next_quest = quests[i + 1]
+                quest.prev_quest = quests[i - 1]
             elif i == len(quests) -1 :
+                quest.next_quest = quests[0]
                 quest.prev_quest = quests[i - 1]
             else:
-                quest.prev_quest = quests[i - 1]
                 quest.next_quest = quests[i + 1]
+                quest.prev_quest = quests[i - 1]
 
             quest.save()
 

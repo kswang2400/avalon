@@ -31,7 +31,7 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def game(request, pk):
-    debug = request.GET.get('debug') == 'true' or settings.DEBUG
+    debug = request.GET.get('debug') == 'true'
     game = Game(pk=pk)
 
     return render(request, 'game.html', game.get_debug_context(debug=debug))
