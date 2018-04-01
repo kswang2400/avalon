@@ -11,6 +11,10 @@ class AvalonGame(models.Model):
         related_name='quest_master',
         blank=True,
         null=True)
+    first_quest = models.ForeignKey('AvalonQuest',
+        related_name='first_quest',
+        blank=True,
+        null=True)
     current_quest = models.ForeignKey('AvalonQuest',
         related_name='current_quest',
         blank=True,
@@ -18,9 +22,19 @@ class AvalonGame(models.Model):
 
     @property
     def users(self):
-        user_ids = AvalonGameUser.objects.filter(game=self
-            ).values_list('user_id', flat=True)
-        return AvalonUser.objects.filter(pk__in=user_ids)
+        return [gu.user for gu in self.ordered_game_users]
+
+    @property
+    def ordered_game_users(self):
+        first_game_user = AvalonGameUser.objects.get(game=self, user=self.user)
+        ordered_users = [first_game_user]
+
+        current_game_user = first_game_user.next_player
+        while current_game_user is not None and current_game_user != first_game_user:
+            ordered_users.append(current_game_user)
+            current_game_user = current_game_user.next_player
+
+        return ordered_users
 
     @property
     def game_users(self):
@@ -29,12 +43,30 @@ class AvalonGame(models.Model):
     @property
     def quests(self):
         ordered_quests = []
-        current_quest = self.current_quest
+        current_quest = self.first_quest
         while current_quest is not None:
             ordered_quests.append(current_quest)
             current_quest = current_quest.next_quest
 
         return ordered_quests
+
+    def handle_vote_for_quest(self):
+        if not self.current_quest.is_approved:
+            self.quest_master = self.quest_master.next_player
+            self.save()
+
+        return
+
+    def handle_vote_on_quest(self, user, vote):
+        quest_user = AvalonGameUser.objects.get(game=self, user=user)
+        quest_member = AvalonQuestMember.objects.get(
+            quest=self.current_quest,
+            member=quest_user)
+
+        quest_member.vote = (vote == 'pass')
+        quest_member.save()
+
+        return
 
     def who_is(self, role):
         return self.game_users.filter(role=role)
@@ -51,7 +83,7 @@ class AvalonGame(models.Model):
 
         for i, quest in enumerate(quests):
             if i == 0:
-                avalon_game.current_quest = quest
+                avalon_game.first_quest = quest
                 avalon_game.save()
                 quest.next_quest = quests[i + 1]
             elif i == len(quests) -1 :

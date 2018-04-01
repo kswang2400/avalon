@@ -33,6 +33,7 @@ class Game(object):
             'pk',
             'users',
             'quest_sizes',
+            'first_quest',
             'current_quest',
 
             'assasin',
@@ -46,7 +47,6 @@ class Game(object):
 
             'quests',
             'quest_master',
-
             'game_users',
         ]
 
@@ -59,7 +59,7 @@ class Game(object):
             debug_context[key] = value
 
         return debug_context
-    
+
     def mock_game_user_quest_member_votes(self):
         for game_user in self.game.game_users:
             game_user.vote_for_quest(bool(random.randint(0, 1)))
@@ -72,6 +72,7 @@ class SavedGame(object):
 
         self.avalon_game = saved_game
         self.pk = saved_game.pk
+        self.first_quest = saved_game.first_quest
         self.current_quest = saved_game.current_quest
         self.users = saved_game.users
 
@@ -124,7 +125,7 @@ class NewGame(object):
     def _setup_game_configs(self, users):
         self.user = users[0]
         self.users = users
-        self.current_quest = 1
+        self.current_quest = 1 # KW: this is wrong, this needs to be a db object
 
         (self.num_resistance,
         self.num_spies,

@@ -22,16 +22,30 @@
         <br>
         <input type="text" name="game_pk" value={{ pk }} hidden />
         <input type="submit" value="Pick your crew" />
-      </form>
-      <br>
+      </form><br>
+
       <form action="/mock_vote_for_quest/" method="POST">
         {% csrf_token %}
         <input type="submit" value="Mock votes for quest" />
-      </form>
+      </form><br>
+
+      <form action="/vote/quest/" method="POST">
+        {% csrf_token %}
+        <label for="pass">Pass</label>
+        <input type="radio" id="pass" name="vote" value="pass" />
+        <label for="fail">Fail</label>
+        <input type="radio" id="fail" name="vote" value="fail" />
+        <br><br>
+        <input type="text" name="game_pk" value={{ pk }} hidden />
+        <input type="submit" value="Vote on quest" />
+      </form><br>
     </div>
+
+
     <div class="current-state">
       <h3>current state</h3>
 
+      first_quest: {{ first_quest.pk }}<br>
       current_quest: {{ current_quest.pk }}<br>
       quest_master: {{ quest_master.user.username }}<br>
 
@@ -45,14 +59,13 @@
   </div>
 
   <div id="quests-container"?>
-    <h3>quests</h3>
     <div id="quests-metadata">
       {% for quest in quests %}
         <div class="quest-metadata">
-          <h3>{{ quest.pk }}</h3>
+          <h3>Quest {{ quest.pk }}</h3>
+          quest id: {{ quest.id }}<br>
           num_players: {{ quest.num_players }}<br>
-          quest id: {{ quest.id }}<br><br>
-
+          <br>
           {% for username, vote in quest.votes_for_quest %}
             <div class="votes-for-quest">
               <a>{{ username }}</a><a>{{ vote }}</a>

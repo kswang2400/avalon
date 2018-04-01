@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import login, authenticate
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -30,10 +31,24 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def game(request, pk):
-    debug = request.GET.get('debug') == 'true'
+    debug = request.GET.get('debug') == 'true' or settings.DEBUG
     game = Game(pk=pk)
 
     return render(request, 'game.html', game.get_debug_context(debug=debug))
+
+def vote_on_quest(request):
+    # KW: this should be a POST handler decorator
+    if request.method == 'GET':
+        return HttpResponseRedirect(reverse('index'))
+
+    user = request.user
+    game_pk = int(request.POST.get('game_pk'))
+    vote = request.POST.get('vote', 'pass')
+
+    game = Game(pk=game_pk)
+    game.game.avalon_game.handle_vote_on_quest(user, vote)
+
+    return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
 
 def mock_vote_for_quest(request):
     if request.method == 'GET':
@@ -44,6 +59,7 @@ def mock_vote_for_quest(request):
 
     game = Game(pk=8)
     game.mock_game_user_quest_member_votes()
+    game.game.avalon_game.handle_vote_for_quest()
 
     return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
 
