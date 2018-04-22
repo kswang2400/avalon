@@ -34,31 +34,28 @@ def signup(request):
 def new_game(request):
     if request.method == 'POST':
         user_ids = request.POST.getlist('users')
-        print('\n\nuser_ids')
-        print(user_ids)
-        print('\n\n')
-
         game = Game(users=AvalonUser.objects.filter(pk__in=user_ids))
 
-        return render(request, 'game.html', game.get_debug_context())
+        return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
 
     context = {
         'all_users': AvalonUser.objects.all(),
     }
 
-    print('\n\n\n')
-    import pprint
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(context)
-    print('\n\n\n')
-
     return render(request, 'new_game.html', context)
 
 def game(request, pk):
+    user = request.user
     debug = request.GET.get('debug') == 'true'
-    game = Game(pk=pk)
 
-    return render(request, 'game.html', game.get_debug_context(debug=debug))
+    game = Game(pk=pk)
+    game_user = AvalonGameUser.objects.get(game_id=pk, user=user)
+
+    context = game.get_debug_context(debug=debug)
+    context['game_user'] = game_user
+    context['special_knowledge'] = game_user.special_knowledge
+
+    return render(request, 'game.html', context)
 
 def finalize_quest(request):
     # KW: this should be a POST handler decorator

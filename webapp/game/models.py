@@ -53,6 +53,7 @@ class AvalonGame(models.Model):
 
     def finalize_quest(self):
         self.current_quest = self.current_quest.next_quest
+        self.quest_master = self.quest_master.next_player
         self.save()
 
         return
@@ -207,13 +208,13 @@ class AvalonGameUser(models.Model):
     PERCIVAL = 7
 
     GAME_ROLES = (
-        (LOYAL_SERVANT, LOYAL_SERVANT),
-        (MINION_OF_MORDRED, MINION_OF_MORDRED),
-        (ASSASIN, ASSASIN),
-        (MERLIN, MERLIN),
-        (MORGANA, MORGANA),
-        (MORDRED, MORDRED),
-        (PERCIVAL, PERCIVAL),
+        (LOYAL_SERVANT, 'LOYAL_SERVANT'),
+        (MINION_OF_MORDRED, 'MINION_OF_MORDRED'),
+        (ASSASIN, 'ASSASIN'),
+        (MERLIN, 'MERLIN'),
+        (MORGANA, 'MORGANA'),
+        (MORDRED, 'MORDRED'),
+        (PERCIVAL, 'PERCIVAL'),
     )
 
     user = models.ForeignKey(AvalonUser)
@@ -228,10 +229,33 @@ class AvalonGameUser(models.Model):
         blank=True,
         null=True)
 
-    role = models.CharField(
-        max_length=3,
+    role = models.IntegerField(
         choices=GAME_ROLES,
         default=LOYAL_SERVANT)
+
+    @property
+    def game_role(self):
+        return [u[1] for u in self.GAME_ROLES if u[0] == self.role][0]
+
+    @property
+    def special_knowledge(self):
+        VISIBLE_MINIONS = [
+            self.MINION_OF_MORDRED,
+            self.ASSASIN,
+            self.MORGANA,
+        ]
+        MINIONS_OF_MORDRED = VISIBLE_MINIONS + [self.MORDRED]
+        PERCIVALS_DUO = [self.MERLIN, self.MORGANA]
+
+        game_users = AvalonGameUser.objects.filter(game=self.game).exclude(role=self.role)
+        if self.role in MINIONS_OF_MORDRED:
+            return game_users.filter(role__in=MINIONS_OF_MORDRED)
+        elif self.role == self.MERLIN:
+            return game_users.filter(role__in=VISIBLE_MINIONS)
+        elif self.role == self.PERCIVAL:
+            return game_users.filter(role__in=PERCIVALS_DUO)
+
+        return game_users.filter(role=0)
 
     def vote_for_quest(self, vote):
         quest_vote, created = AvalonQuestVote.objects.get_or_create(

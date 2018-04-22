@@ -4,75 +4,90 @@
 <h3>Avalon game {{ pk }}</h3>
 
 <div id="page">
-  <div id="game-contents">
-    <div class="actions">
-      <form action="/suggest/" method="POST">
-        {% csrf_token %}
-        <input type="text" name="game_pk" value={{ pk }} hidden />
-        <label for="reset_quest_members">Who should go on this quest?</label>
-        <br><br>
-        {% for game_user in game_users %}
-          <input
-            type="checkbox"
-            id={{ game_user.pk }}
-            name="users"
-            value={{ game_user.pk }}>
-          <label for={{ game_user.pk }}>{{ game_user.user.username }}</label>
-          <br>
-        {% endfor %}
+  <div id="game-actions">
+    <form action="/suggest/" method="POST">
+      {% csrf_token %}
+      <input type="text" name="game_pk" value={{ pk }} hidden />
+      <label for="reset_quest_members">Who should go on this quest?</label>
+      <br><br>
+      {% for game_user in game_users %}
+        <input
+          type="checkbox"
+          id={{ game_user.pk }}
+          name="users"
+          value={{ game_user.pk }}>
+        <label for={{ game_user.pk }}>{{ game_user.user.username }}</label>
         <br>
-        <input type="submit" value="Pick your crew" />
-      </form><br>
+      {% endfor %}
+      <br>
+      <input type="submit" value="Pick your crew" />
+    </form><br>
 
-      <form action="/vote/for_quest/" method="POST">
-        {% csrf_token %}
-        <input type="text" name="game_pk" value={{ pk }} hidden />
-        <label for="pass">Yes</label>
-        <input type="radio" id="yes" name="vote" value="yes" />
-        <label for="fail">No</label>
-        <input type="radio" id="no" name="vote" value="no" />
-        <br><br>
-        <input type="submit" value="Vote for quest" />
-      </form><br>
+    <form action="/vote/for_quest/" method="POST">
+      {% csrf_token %}
+      <input type="text" name="game_pk" value={{ pk }} hidden />
+      <label for="pass">Yes</label>
+      <input type="radio" id="yes" name="vote" value="yes" />
+      <label for="fail">No</label>
+      <input type="radio" id="no" name="vote" value="no" />
+      <br><br>
+      <input type="submit" value="Vote for quest" />
+    </form><br>
 
-      <form action="/finalize_vote_for_quests/" method="POST">
-        {% csrf_token %}
-        <input type="text" name="game_pk" value={{ pk }} hidden />
-        <input type="submit" value="Finalize votes for quest" />
-      </form><br>
+    <form action="/finalize_vote_for_quests/" method="POST">
+      {% csrf_token %}
+      <input type="text" name="game_pk" value={{ pk }} hidden />
+      <input type="submit" value="Finalize votes for quest" />
+    </form><br>
 
-      <form action="/vote/quest/" method="POST">
-        {% csrf_token %}
-        <input type="text" name="game_pk" value={{ pk }} hidden />
-        <label for="pass">Pass</label>
-        <input type="radio" id="pass" name="vote" value="pass" />
-        <label for="fail">Fail</label>
-        <input type="radio" id="fail" name="vote" value="fail" />
-        <br><br>
-        <input type="submit" value="Vote on quest" />
-      </form><br>
+    <form action="/vote/quest/" method="POST">
+      {% csrf_token %}
+      <input type="text" name="game_pk" value={{ pk }} hidden />
+      <label for="pass">Pass</label>
+      <input type="radio" id="pass" name="vote" value="pass" />
+      <label for="fail">Fail</label>
+      <input type="radio" id="fail" name="vote" value="fail" />
+      <br><br>
+      <input type="submit" value="Vote on quest" />
+    </form><br>
 
-      <form action="/quest/finalize/" method="POST">
-        {% csrf_token %}
-        <input type="text" name="game_pk" value={{ pk }} hidden />
-        <input type="submit" value="Finalize quest" />
-      </form>
-    </div>
+    <form action="/quest/finalize/" method="POST">
+      {% csrf_token %}
+      <input type="text" name="game_pk" value={{ pk }} hidden />
+      <input type="submit" value="Finalize quest" />
+    </form>
+  </div>
 
-
+  <div id="game-data">
     <div class="current-state">
       <h3>current state</h3>
 
       first_quest: {{ first_quest.pk }}<br>
       current_quest: {{ current_quest.pk }}<br>
-      quest_master: {{ quest_master.user.username }}<br>
+      <br>quest_master: {{ quest_master.user.username }}<br>
 
-      quest_members:
+      <br>quest_members:<br>
       {% for m in current_quest.members %}
         <a>{{ m.member.user.username }}, </a>
       {% endfor %}<br>
 
-      passed?: {{ current_quest.is_successful }}<br>
+      <br>special roles:<br>
+      {% for gu in assasin %}assasin{% endfor %}<br>
+      {% for gu in merlin %}merlin{% endfor %}<br>
+      {% for gu in mordred %}mordred{% endfor %}<br>
+      {% for gu in morgana %}morgana{% endfor %}<br>
+      {% for gu in percival %}percival{% endfor %}<br><br>
+    </div>
+
+    <div class="whoami">
+        <h3>who am i</h3>
+        you: {{ game_user.user.username }}<br>
+        {{ game_user.game_role }}<br>
+
+        <br>special knowledge:<br>
+        {% for gu in game_user.special_knowledge %}
+        {{ gu.user.username }}<br>
+        {% endfor %}<br>
     </div>
   </div>
 
@@ -104,34 +119,34 @@
   </div>
 
   {% if debug %}
-    <div class="metadata">
-      <h3>game metadata</h3>
-      id: {{ pk }}<br>
+  <div class="metadata">
+    <h3>game metadata</h3>
+    id: {{ pk }}<br>
 
-      users:
-      {% for u in users %}
-        <a>{{ u.username }}, </a>
-      {% endfor %}<br>
+    users:
+    {% for u in users %}
+      <a>{{ u.username }}, </a>
+    {% endfor %}<br>
 
-      quest_sizes:  {{ quest_sizes }}<br>
-      current_quest:  {{ current_quest.pk }}<br><br>
+    quest_sizes:  {{ quest_sizes }}<br>
+    current_quest:  {{ current_quest.pk }}<br><br>
 
-      assasin:  {{ assasin }}<br>
-      merlin:  {{ merlin }}<br>
-      mordred:  {{ mordred }}<br>
-      morgana:  {{ morgana }}<br>
-      percival:  {{ percival }}<br><br>
+    assasin:  {% for gu in assasin %}{{ gu.user.username }}{% endfor %}<br>
+    merlin:  {% for gu in merlin %}{{ gu.user.username }}{% endfor %}<br>
+    mordred:  {% for gu in mordred %}{{ gu.user.username }}{% endfor %}<br>
+    morgana:  {% for gu in morgana %}{{ gu.user.username }}{% endfor %}<br>
+    percival:  {% for gu in percival %}{{ gu.user.username }}{% endfor %}<br><br>
 
-      loyals:
-      {% for s in loyal_servants %}
-        <a>{{ s.user.username }}, </a>
-      {% endfor %}<br><br>
+    loyals:
+    {% for s in loyal_servants %}
+      <a>{{ s.user.username }}, </a>
+    {% endfor %}<br><br>
 
-      minions:
-      {% for s in minions_of_mordred %}
-        <a>{{ s.user.username }}, </a>
-      {% endfor %}<br>
-    </div>
+    minions:
+    {% for s in minions_of_mordred %}
+      <a>{{ s.user.username }}, </a>
+    {% endfor %}<br>
+  </div>
   {% endif %}
 </div>
 {% endblock %}

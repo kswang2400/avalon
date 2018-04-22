@@ -94,7 +94,6 @@ DATABASES = {
 }
 DATABASES['default'] = DATABASES['postgresql']
 DATABASES['default']['TEST'] = DATABASES['sqlite3']
-DATABASES['default']['TEST']['NAME'] = 'test_database'
 
 AUTH_USER_MODEL = 'game.AvalonUser'
 

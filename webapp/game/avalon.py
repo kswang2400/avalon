@@ -9,19 +9,27 @@ from game.models import AvalonGame, AvalonGameUser, AvalonUser, AvalonQuest
 # BASE_ROLES = ['merlin', 'assasin']
 BASE_ROLES = [
     AvalonGameUser.MERLIN,
+    AvalonGameUser.LOYAL_SERVANT,
+    AvalonGameUser.LOYAL_SERVANT,
+
     AvalonGameUser.ASSASIN,
-    AvalonGameUser.LOYAL_SERVANT,
-    AvalonGameUser.LOYAL_SERVANT,
-    AvalonGameUser.LOYAL_SERVANT,
     AvalonGameUser.MINION_OF_MORDRED,
+]
+# KW: this is ordered in how we add players to the game
+EXTRA_ROLES = [
+    AvalonGameUser.LOYAL_SERVANT,
+    AvalonGameUser.MORDRED,
+    AvalonGameUser.PERCIVAL,
+    AvalonGameUser.LOYAL_SERVANT,
+    AvalonGameUser.MORGANA,
 ]
 CONFIGS = {
     5   : [3, 2, [2, 3, 2, 3, 3], BASE_ROLES],
-    6   : [4, 2, [2, 3, 4, 3, 4], BASE_ROLES],
-    7   : [4, 3, [2, 3, 3, 4, 4], BASE_ROLES],
-    8   : [5, 3, [3, 4, 4, 5, 5], BASE_ROLES],
-    9   : [6, 3, [3, 4, 4, 5, 5], BASE_ROLES],
-    10  : [6, 4, [3, 4, 4, 5, 5], BASE_ROLES],
+    6   : [4, 2, [2, 3, 4, 3, 4], BASE_ROLES + EXTRA_ROLES[:1]],
+    7   : [4, 3, [2, 3, 3, 4, 4], BASE_ROLES + EXTRA_ROLES[:2]],
+    8   : [5, 3, [3, 4, 4, 5, 5], BASE_ROLES + EXTRA_ROLES[:3]],
+    9   : [6, 3, [3, 4, 4, 5, 5], BASE_ROLES + EXTRA_ROLES[:4]],
+    10  : [6, 4, [3, 4, 4, 5, 5], BASE_ROLES + EXTRA_ROLES[:5]],
 }
 
 class Game(object):
