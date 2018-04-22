@@ -110,6 +110,7 @@ class NewGame(object):
         self.quests = self.avalon_game.quests
         self.quest_master = self.avalon_game.quest_master
         self.game_users = self.avalon_game.game_users
+        self.first_quest = self.avalon_game.first_quest
 
         return
 
@@ -135,8 +136,8 @@ class NewGame(object):
         return self.roles
 
     def _distribute_roles(self, users, roles):
-        random.shuffle(users)
-        random.shuffle(roles)
+        random.shuffle(list(users))
+        random.shuffle(list(roles))
 
         ordered_users_with_roles = list(zip(users, roles))
 

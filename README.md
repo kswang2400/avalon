@@ -27,7 +27,16 @@ lsof -i:80
 /usr/local/var/run/nginx.pid
 
 # postgres
-psql --u postgres
+sudo -u postgres createuser admin
+sudo -u postgres createdb avalon
+sudo -u postgres psql
+psql -U admin avalon
+sudo vim /var/lib/pgsql9/data/pg_hba.conf
+
+# KW: this might be bad, works but revisit
+host    all             all             0.0.0.0/0               trust
+
+sudo vim /var/lib/pgsql9/data/postgresql.conf
 
 # nginx.conf
 on mac:

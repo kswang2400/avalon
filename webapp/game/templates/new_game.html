@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>New Game</h3>
+
+<form action="/game/new/" method="POST">
+  {% csrf_token %}
+  <label for="reset_quest_members">Who's playing?</label>
+  <br><br>
+  {% for user in all_users %}
+    <input
+      type="checkbox"
+      id={{ user.pk }}
+      name="users"
+      value={{ user.pk }}>
+    <label for={{ user.pk }}>{{ user.username }}</label>
+    <br>
+  {% endfor %}
+  <br>
+  <input type="submit" value="Start new game!" />
+</form><br>
+
+{% endblock %}

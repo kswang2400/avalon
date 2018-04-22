@@ -5,8 +5,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
 
-from game.forms import AvalonUserCreationForm
 from game.avalon import Game
+from game.forms import AvalonUserCreationForm
+from game.models import AvalonGameUser, AvalonUser
 
 def index(request):
     return render(request, 'index.html', {'foo': 'bar'})
@@ -30,6 +31,29 @@ def signup(request):
 
     return render(request, 'signup.html', {'form': form})
 
+def new_game(request):
+    if request.method == 'POST':
+        user_ids = request.POST.getlist('users')
+        print('\n\nuser_ids')
+        print(user_ids)
+        print('\n\n')
+
+        game = Game(users=AvalonUser.objects.filter(pk__in=user_ids))
+
+        return render(request, 'game.html', game.get_debug_context())
+
+    context = {
+        'all_users': AvalonUser.objects.all(),
+    }
+
+    print('\n\n\n')
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(context)
+    print('\n\n\n')
+
+    return render(request, 'new_game.html', context)
+
 def game(request, pk):
     debug = request.GET.get('debug') == 'true'
     game = Game(pk=pk)
@@ -42,11 +66,11 @@ def finalize_quest(request):
         return HttpResponseRedirect(reverse('index'))
 
     game_pk = int(request.POST.get('game_pk'))
-    game = Game(pk=game_pk)
 
+    game = Game(pk=game_pk)
     game.game.avalon_game.finalize_quest()
 
-    return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
+    return HttpResponseRedirect(reverse('game', args=[game_pk]))
 
 def vote_on_quest(request):
     # KW: this should be a POST handler decorator
@@ -55,27 +79,42 @@ def vote_on_quest(request):
 
     user = request.user
     game_pk = int(request.POST.get('game_pk'))
-    vote = request.POST.get('vote', 'pass')
+    vote = request.POST.get('vote', 'pass') == 'pass'
 
     game = Game(pk=game_pk)
     game.game.avalon_game.handle_vote_on_quest(user, vote)
 
-    return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
+    return HttpResponseRedirect(reverse('game', args=[game_pk]))
 
-def mock_vote_for_quest(request):
+def vote_for_quest(request):
+    # KW: this should be a POST handler decorator
     if request.method == 'GET':
         return HttpResponseRedirect(reverse('index'))
 
-    # KW: TODO this is for mocking anyways
-    # game_pk = int(request.POST.get('game_pk'))
+    user = request.user
+    game_pk = int(request.POST.get('game_pk'))
+    vote = request.POST.get('vote', 'yes') == 'yes'
 
-    game = Game(pk=8)
-    game.mock_game_user_quest_member_votes()
-    game.game.avalon_game.handle_vote_for_quest()
+    game = Game(pk=game_pk)
+    game.game.avalon_game.handle_vote_for_quest(user, vote)
 
-    return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
+    return HttpResponseRedirect(reverse('game', args=[game_pk]))
+
+def finalize_vote_for_quests(request):
+    # KW: this should be a POST handler decorator
+    if request.method == 'GET':
+        return HttpResponseRedirect(reverse('index'))
+
+    game_pk = int(request.POST.get('game_pk'))
+
+    game = Game(pk=game_pk)
+    # game.mock_game_user_quest_member_votes()
+    game.game.avalon_game.finalize_vote_for_quests()
+
+    return HttpResponseRedirect(reverse('game', args=[game_pk]))
 
 def questmaster_suggest(request):
+    # KW: this should be a POST handler decorator
     if request.method == 'GET':
         return HttpResponseRedirect(reverse('index'))
 
@@ -85,4 +124,4 @@ def questmaster_suggest(request):
     game = Game(pk=game_pk)
     game.game.current_quest.reset_members(member_ids)
 
-    return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
+    return HttpResponseRedirect(reverse('game', args=[game_pk]))

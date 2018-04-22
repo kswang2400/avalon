@@ -79,18 +79,22 @@ WSGI_APPLICATION = 'avalon.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'sqlite3': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mydatabase',
     },
-    # KW: TODO set up real db
-    # 'postgres_fml': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': os.environ.get('AV_DB_NAME'),
-    #     'USER': os.environ.get('AV_DB_USER'),
-    #     'PASSWORD': os.environ.get('AV_DB_PW'),
-    # }
+    'postgresql': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('AV_DB_NAME'),
+        'USER': os.environ.get('AV_DB_USER'),
+        'PASSWORD': os.environ.get('AV_DB_PASSWORD'),
+        # 'HOST': 'localhost',
+        'PORT': '5432',
+    },
 }
+DATABASES['default'] = DATABASES['postgresql']
+DATABASES['default']['TEST'] = DATABASES['sqlite3']
+DATABASES['default']['TEST']['NAME'] = 'test_database'
 
 AUTH_USER_MODEL = 'game.AvalonUser'
 

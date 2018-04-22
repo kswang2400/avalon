@@ -57,7 +57,13 @@ class AvalonGame(models.Model):
 
         return
 
-    def handle_vote_for_quest(self):
+    def handle_vote_for_quest(self, user, vote):
+        quest_user = AvalonGameUser.objects.get(game=self, user=user)
+        quest_user.vote_for_quest(vote)
+
+        return
+
+    def finalize_vote_for_quests(self):
         if not self.current_quest.is_approved:
             self.quest_master = self.quest_master.next_player
             self.save()
@@ -71,7 +77,7 @@ class AvalonGame(models.Model):
             quest=self.current_quest,
             member=quest_user)
 
-        quest_member.vote = (vote == 'pass')
+        quest_member.vote = vote
         quest_member.save()
 
         return
@@ -83,31 +89,10 @@ class AvalonGame(models.Model):
         avalon_game = cls(user=new_game.user)
         avalon_game.save()
 
-        # KW: TODO refactor this out for creating quests
-        quests = [
-            AvalonQuest.objects.create(game=avalon_game, num_players=n)
-            for n
-            in new_game.quest_sizes]
-
-        for i, quest in enumerate(quests):
-            if i == 0:
-                avalon_game.first_quest = quest
-                avalon_game.save()
-                quest.next_quest = quests[i + 1]
-                quest.prev_quest = quests[i - 1]
-            elif i == len(quests) -1 :
-                quest.next_quest = quests[0]
-                quest.prev_quest = quests[i - 1]
-            else:
-                quest.next_quest = quests[i + 1]
-                quest.prev_quest = quests[i - 1]
-
-            quest.save()
-
         # KW: TODO refactor this out for linking ordered game users
         users = [x[0] for x in new_game.users]
         for user, role in new_game.users:
-            current_player = AvalonGameUser.objects.create(
+            AvalonGameUser.objects.create(
                 game=avalon_game,
                 user=user,
                 role=role)
@@ -129,6 +114,32 @@ class AvalonGame(models.Model):
         # KWL: TODO ask for age so we always start with youngest xP
         avalon_game.quest_master = curr
         avalon_game.save()
+
+        # KW: TODO refactor this out for creating quests
+        quests = [
+            AvalonQuest.objects.create(game=avalon_game, num_players=n)
+            for n
+            in new_game.quest_sizes]
+
+        for i, quest in enumerate(quests):
+            if i == 0:
+                avalon_game.current_quest = avalon_game.first_quest = quest
+                avalon_game.save()
+                quest.next_quest = quests[i + 1]
+                quest.prev_quest = quests[i - 1]
+            elif i == len(quests) -1 :
+                quest.next_quest = quests[0]
+                quest.prev_quest = quests[i - 1]
+            else:
+                quest.next_quest = quests[i + 1]
+                quest.prev_quest = quests[i - 1]
+
+            quest.save()
+
+            for game_user in AvalonGameUser.objects.filter(game=avalon_game):
+                AvalonQuestVote.objects.get_or_create(
+                    quest=quest,
+                    game_user=game_user)
 
         return avalon_game
 
@@ -206,7 +217,7 @@ class AvalonGameUser(models.Model):
     )
 
     user = models.ForeignKey(AvalonUser)
-    game = models.ForeignKey(AvalonGame)
+    game = models.ForeignKey(AvalonGame, blank=True, null=True)
 
     prev_player = models.ForeignKey('AvalonGameUser',
         related_name='prev',

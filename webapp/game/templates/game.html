@@ -8,6 +8,7 @@
     <div class="actions">
       <form action="/suggest/" method="POST">
         {% csrf_token %}
+        <input type="text" name="game_pk" value={{ pk }} hidden />
         <label for="reset_quest_members">Who should go on this quest?</label>
         <br><br>
         {% for game_user in game_users %}
@@ -20,23 +21,34 @@
           <br>
         {% endfor %}
         <br>
-        <input type="text" name="game_pk" value={{ pk }} hidden />
         <input type="submit" value="Pick your crew" />
       </form><br>
 
-      <form action="/mock_vote_for_quest/" method="POST">
+      <form action="/vote/for_quest/" method="POST">
         {% csrf_token %}
-        <input type="submit" value="Mock votes for quest" />
+        <input type="text" name="game_pk" value={{ pk }} hidden />
+        <label for="pass">Yes</label>
+        <input type="radio" id="yes" name="vote" value="yes" />
+        <label for="fail">No</label>
+        <input type="radio" id="no" name="vote" value="no" />
+        <br><br>
+        <input type="submit" value="Vote for quest" />
+      </form><br>
+
+      <form action="/finalize_vote_for_quests/" method="POST">
+        {% csrf_token %}
+        <input type="text" name="game_pk" value={{ pk }} hidden />
+        <input type="submit" value="Finalize votes for quest" />
       </form><br>
 
       <form action="/vote/quest/" method="POST">
         {% csrf_token %}
+        <input type="text" name="game_pk" value={{ pk }} hidden />
         <label for="pass">Pass</label>
         <input type="radio" id="pass" name="vote" value="pass" />
         <label for="fail">Fail</label>
         <input type="radio" id="fail" name="vote" value="fail" />
         <br><br>
-        <input type="text" name="game_pk" value={{ pk }} hidden />
         <input type="submit" value="Vote on quest" />
       </form><br>
 
@@ -79,9 +91,12 @@
           {% endfor %}<br>
           quest is approved: {{ quest.is_approved }}<br><br>
 
+          {% if debug %}
           {% for username, vote in quest.votes_on_quest %}
             {{ username }}: {{ vote }}<br>
           {% endfor %}<br>
+          {% endif %}
+
           quest is successful: {{ quest.is_successful }}<br><br>
         </div>
       {% endfor %}
