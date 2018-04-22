@@ -11,6 +11,7 @@ mkvirtualenv --python=/usr/bin/python3 avalon
 workon avalon
 virtualenv -p python3 avalon
 source /home/ec2-user/venv/avalon/bin/activate
+source /Users/kwang/.virtualenvs/avalon/bin/activate
 
 # python
 pip install -r requirements.txt
