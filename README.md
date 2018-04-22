@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kswang2400/avalon.svg?branch=master)](https://travis-ci.org/kswang2400/avalon)
+
 [play some avalon!](http://34.212.31.133/)
 
 
