@@ -17,9 +17,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from . import views
+from game import views as game_views
 
 urlpatterns = [
     url(r'^', include('game.urls')),
-    url(r'^accounts/profile/', views.profile, name='profile'),
+    url(r'^accounts/profile/', game_views.index, name='index'),
     url(r'^admin/', admin.site.urls),
 ]

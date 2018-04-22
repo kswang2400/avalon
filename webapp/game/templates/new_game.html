@@ -1,13 +1,14 @@
-{% extends 'base.html' %}
+{% extends 'base_mobile.html' %}
 
 {% block content %}
 
 <h3>New Game</h3>
+<br>
 
 <form action="/game/new/" method="POST">
   {% csrf_token %}
   <label for="reset_quest_members">Who's playing?</label>
-  <br><br>
+  <br>
   {% for user in all_users %}
     <input
       type="checkbox"
@@ -18,7 +19,7 @@
     <br>
   {% endfor %}
   <br>
-  <input type="submit" value="Start new game!" />
+  <button type="submit" class="btn btn-primary">Start new game!</button>
 </form><br>
 
 {% endblock %}

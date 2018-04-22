@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 
 def profile(request):
-    # KW: TODO template this with {% extends 'base.html' %} for login nav
     inline_template = """
         user: {user}<br>
         date_joined: {date_joined}<br>

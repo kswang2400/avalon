@@ -1,5 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'base_mobile.html' %}
 
 {% block content %}
-    <h1>Game</h1>
+    <h1>Avalon Games</h1>
+
+    <a href='/game/new'>Create a new game</a>
+
+    <br><br>
+    {% for g in games %}
+        <a href={{ g }}>{{ g }} </a><br>
+    {% endfor %}
 {% endblock %}

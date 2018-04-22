@@ -1,0 +1,127 @@
+{% extends 'base_mobile.html' %}
+
+{% block content %}
+<h2>Avalon game {{ pk }}</h2>
+
+<div class="current-state">
+  <h4>current state</h4>
+  <div class="flexbox-horizontal">
+    {% for quest in quests %}
+
+    {% if quest.pk == current_quest.pk %}
+    <div class="box blue-border">
+      Quest {{ quest.pk }}<br>
+      {% if quest.is_successful %}
+      <span class="quest-icon-success glyphicon glyphicon-ok" aria-hidden="true"></span>
+      {% else %}
+      <span class="quest-icon-failure glyphicon glyphicon-remove" aria-hidden="true"></span>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="box white-border">
+      Quest {{ quest.pk }}<br>
+      {% if quest.is_successful %}
+      <span class="quest-icon-success glyphicon glyphicon-ok" aria-hidden="true"></span>
+      {% else %}
+      <span class="quest-icon-failure glyphicon glyphicon-remove" aria-hidden="true"></span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% endfor %}
+  </div>
+  special roles:
+  {% for gu in assasin %}assasin{% endfor %}
+  {% for gu in merlin %}merlin{% endfor %}
+  {% for gu in mordred %}mordred{% endfor %}
+  {% for gu in morgana %}morgana{% endfor %}
+  {% for gu in percival %}percival{% endfor %}<br>
+
+  quest_master: {{ quest_master.user.username }}<br>
+
+  quest_members:
+  {% for m in current_quest.members %}
+    <text>{{ m.member.user.username }}, </text>
+  {% endfor %}
+  <br><br>
+
+  <div class="quest-metadata">
+    <h4>Quest {{ current_quest.pk }}</h4>
+    quest id: {{ current_quest.id }}<br>
+    num_players: {{ current_quest.num_players }}<br>
+    quest is approved: {{ current_quest.is_approved }}<br>
+    quest is successful: {{ current_quest.is_successful }}<br>
+    <br>
+  </div>
+</div>
+
+<div id="game-actions">
+  <form action="/suggest/" method="POST">
+    {% csrf_token %}
+    <input type="text" name="game_pk" value={{ pk }} hidden />
+    <label for="reset_quest_members">Who should go on this quest?</label>
+    <br>
+    <div class="flexbox">
+      <div>
+      {% for game_user in game_users %}
+        <input
+          type="checkbox"
+          id={{ game_user.pk }}
+          name="users"
+          value={{ game_user.pk }}>
+        <label for={{ game_user.pk }}>{{ game_user.user.username }}</label>
+        <br>
+      {% endfor %}
+      </div>
+      <div class="button-right">
+        <button type="submit" class="btn btn-primary">Pick crew</button>
+      </div>
+    </div>
+  </form><br>
+
+  <form action="/vote/for_quest/" method="POST">
+    {% csrf_token %}
+    <div class="flexbox">
+      <div>
+        <input type="text" name="game_pk" value={{ pk }} hidden />
+        <label for="pass">Yes</label>
+        <input type="radio" id="yes" name="vote" value="yes" />
+        <label for="fail">No</label>
+        <input type="radio" id="no" name="vote" value="no" />
+      </div>
+      <div class="button-right">
+        <button type="submit" class="btn btn-primary">Vote for quest</button>
+      </div>
+    </div>
+  </form><br>
+
+  <form action="/vote/quest/" method="POST">
+    {% csrf_token %}
+    <input type="text" name="game_pk" value={{ pk }} hidden />
+    <div class="flexbox">
+      <div>
+        <label for="pass">Pass</label>
+        <input type="radio" id="pass" name="vote" value="pass" />
+        <label for="fail">Fail</label>
+        <input type="radio" id="fail" name="vote" value="fail" />
+      </div>
+      <div class="button-right">
+        <button type="submit" class="btn btn-primary">Vote on quest</button>
+      </div>
+    </div>
+  </form><br>
+
+  <div class="flexbox">
+    <form action="/finalize_vote_for_quests/" method="POST">
+      {% csrf_token %}
+        <input type="text" name="game_pk" value={{ pk }} hidden />
+      <button type="submit" class="btn btn-primary">Finalize votes for quest</button>
+    </form><br>
+    <form action="/quest/finalize/" method="POST">
+      {% csrf_token %}
+      <input type="text" name="game_pk" value={{ pk }} hidden />
+      <button type="submit" class="btn btn-primary">Finalize quest</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

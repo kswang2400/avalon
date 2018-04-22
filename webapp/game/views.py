@@ -1,3 +1,5 @@
+import re
+
 from django.conf import settings
 from django.contrib.auth import login, authenticate
 from django.core.urlresolvers import reverse
@@ -10,7 +12,14 @@ from game.forms import AvalonUserCreationForm
 from game.models import AvalonGameUser, AvalonUser
 
 def index(request):
-    return render(request, 'index.html', {'foo': 'bar'})
+    user = request.user
+
+    all_games = AvalonGameUser.objects.filter(user=user).values_list('game_id', flat=True)
+    context = {
+        'games': [u'/game/{id}'.format(id=gid) for gid in all_games]
+    }
+
+    return render(request, 'index.html', context)
 
 def signup(request):
     if request.user.is_authenticated():
@@ -44,9 +53,19 @@ def new_game(request):
 
     return render(request, 'new_game.html', context)
 
+def check_mobile(request):
+    """Return True if the request comes from a mobile device."""
+    MOBILE_AGENT_RE=re.compile(r".*(iphone|mobile|androidtouch)",re.IGNORECASE)
+
+    if MOBILE_AGENT_RE.match(request.META['HTTP_USER_AGENT']):
+        return True
+    else:
+        return False
+
 def game(request, pk):
     user = request.user
     debug = request.GET.get('debug') == 'true'
+    is_mobile = check_mobile(request)
 
     game = Game(pk=pk)
     game_user = AvalonGameUser.objects.get(game_id=pk, user=user)
@@ -55,7 +74,10 @@ def game(request, pk):
     context['game_user'] = game_user
     context['special_knowledge'] = game_user.special_knowledge
 
-    return render(request, 'game.html', context)
+    if is_mobile:
+        return render(request, 'game_mobile.html', context)
+    else:
+        return render(request, 'game.html', context)
 
 def finalize_quest(request):
     # KW: this should be a POST handler decorator
