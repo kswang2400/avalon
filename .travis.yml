@@ -1,13 +1,13 @@
 language: python
-
 python:
-  - 3.6
-
+- 3.6
 before_script:
-  - cd webapp
-
+- psql -c "CREATE USER ${AV_DB_USER} WITH PASSWORD '${AV_DB_PASSWORD}';" -U postgres
+- psql -c "ALTER USER ${AV_DB_USER} CREATEDB;" -U postgres
+- psql -c "CREATE DATABASE test_${AV_DB_NAME};" -U postgres
+- psql -c "ALTER DATABASE test_${AV_DB_NAME} OWNER TO ${AV_DB_USER};" -U postgres
+- cd webapp
 install:
-  - pip install -r webapp/requirements.txt
-
+- pip install -r webapp/requirements.txt
 script:
-  - pytest --cov=game
+- pytest --cov=game

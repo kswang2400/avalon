@@ -10,3 +10,7 @@ runserver:
 test:
 	cd webapp
 	pytest --cov=game
+
+nuke_db:
+	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+	find . -path "*/migrations/*.pyc"  -delete

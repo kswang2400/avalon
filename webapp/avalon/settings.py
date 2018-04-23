@@ -88,12 +88,12 @@ DATABASES = {
         'NAME': os.environ.get('AV_DB_NAME'),
         'USER': os.environ.get('AV_DB_USER'),
         'PASSWORD': os.environ.get('AV_DB_PASSWORD'),
-        # 'HOST': 'localhost',
-        'PORT': '5432',
+        'TEST': {
+            'NAME': 'test_' + os.environ.get('AV_DB_NAME'),
+        }
     },
 }
 DATABASES['default'] = DATABASES['postgresql']
-DATABASES['default']['TEST'] = DATABASES['sqlite3']
 
 AUTH_USER_MODEL = 'game.AvalonUser'
 
