@@ -62,6 +62,9 @@ def check_mobile(request):
     else:
         return False
 
+def check_if_quest_member(user, current_quest):
+    return user.pk in current_quest.members.values_list('member_id', flat=True)
+
 def game(request, pk):
     user = request.user
     debug = request.GET.get('debug') == 'true'
@@ -73,6 +76,7 @@ def game(request, pk):
     context = game.get_debug_context(debug=debug)
     context['game_user'] = game_user
     context['special_knowledge'] = game_user.special_knowledge
+    context['user_on_quest'] = check_if_quest_member(game_user, context['current_quest'])
 
     if is_mobile:
         return render(request, 'game_mobile.html', context)

@@ -11,6 +11,7 @@
     {% if quest.pk == current_quest.pk %}
     <div class="box blue-border">
       Quest {{ quest.pk }}<br>
+      {{ quest.num_players }}<br>
       {% if quest.is_successful %}
       <span class="quest-icon-success glyphicon glyphicon-ok" aria-hidden="true"></span>
       {% else %}
@@ -20,6 +21,7 @@
     {% else %}
     <div class="box white-border">
       Quest {{ quest.pk }}<br>
+      {{ quest.num_players }}<br>
       {% if quest.is_successful %}
       <span class="quest-icon-success glyphicon glyphicon-ok" aria-hidden="true"></span>
       {% else %}
@@ -31,44 +33,44 @@
     {% endfor %}
   </div>
   <div class="whoami">
-    you role: {{ game_user.game_role }}<br>
-
-    <br>special knowledge:<br>
+    your role: <b>{{ game_user.game_role }}</b><br>
+    special knowledge:
     {% for gu in game_user.special_knowledge %}
-    {{ gu.user.username }}<br>
+    <b>{{ gu.user.username }},</b>
     {% endfor %}
   </div>
   special roles:
-  {% for gu in assasin %}assasin{% endfor %}
-  {% for gu in merlin %}merlin{% endfor %}
-  {% for gu in mordred %}mordred{% endfor %}
-  {% for gu in morgana %}morgana{% endfor %}
-  {% for gu in percival %}percival{% endfor %}<br>
+  <b>{% for gu in assasin %}assasin,{% endfor %}
+  {% for gu in merlin %}merlin,{% endfor %}
+  {% for gu in mordred %}mordred,{% endfor %}
+  {% for gu in morgana %}morgana,{% endfor %}
+  {% for gu in percival %}percival,{% endfor %}</b><br>
 
-  quest_master: {{ quest_master.user.username }}<br>
+  users in order: <b>{% for u in users %}{{ u.username }}, {% endfor %}</b><br>
+  quest_master: <b>{{ quest_master.user.username }}</b><br>
 
   quest_members:
   {% for m in current_quest.members %}
-    <text>{{ m.member.user.username }}, </text>
+    <b>{{ m.member.user.username }},</b>
   {% endfor %}
   <br>
 
   <div class="quest-metadata">
     <h4>Quest {{ current_quest.pk }}</h4>
-    quest id: {{ current_quest.id }}<br>
+    {% for username, vote in current_quest.votes_for_quest %}
+      <div class="votes-for-quest">
+        {{ username }}:<b>{{ vote }}</b>
+      </div>
+    {% endfor %}<br>
     num_players: {{ current_quest.num_players }}<br>
     quest is approved: {{ current_quest.is_approved }}<br>
     quest is successful: {{ current_quest.is_successful }}<br>
     <br>
-    {% for username, vote in current_quest.votes_for_quest %}
-      <div class="votes-for-quest">
-        {{ username }}: {{ vote }}
-      </div>
-    {% endfor %}<br>
   </div>
 </div>
 
 <div id="game-actions">
+  {% if quest_master.user.pk == game_user.user.pk %}
   <form action="/suggest/" method="POST">
     {% csrf_token %}
     <input type="text" name="game_pk" value={{ pk }} hidden />
@@ -91,6 +93,7 @@
       </div>
     </div>
   </form><br>
+  {% endif %}
 
   <form action="/vote/for_quest/" method="POST">
     {% csrf_token %}
@@ -108,6 +111,7 @@
     </div>
   </form><br>
 
+  {% if user_on_quest %}
   <form action="/vote/quest/" method="POST">
     {% csrf_token %}
     <input type="text" name="game_pk" value={{ pk }} hidden />
@@ -123,7 +127,9 @@
       </div>
     </div>
   </form><br>
+  {% endif %}
 
+  {% if game_user.user.username == 'kevin' %}
   <div class="flexbox">
     <form action="/finalize_vote_for_quests/" method="POST">
       {% csrf_token %}
@@ -136,5 +142,6 @@
       <button type="submit" class="btn btn-primary">Finalize quest</button>
     </form>
   </div>
+  {% endif %}
 </div>
 {% endblock %}
