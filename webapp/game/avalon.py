@@ -1,8 +1,8 @@
 import random
 
 from game import roles
+from game.exceptions import GameSizeOutOfRange
 from game.models import AvalonGame, AvalonGameUser, AvalonUser, AvalonQuest
-
 
 # KW: TODO figure out roles per num players (default: 6)
 # KW: TODO don't hardcode loyal/minions in base roles
@@ -132,6 +132,9 @@ class NewGame(object):
         return
 
     def _setup_game_configs(self, users):
+        if len(users) not in range(5, 11):
+            raise GameSizeOutOfRange
+
         self.user = users[0]
         self.users = users
         self.current_quest = 1 # KW: this is wrong, this needs to be a db object

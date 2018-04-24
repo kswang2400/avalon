@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.template import loader
 
 from game.avalon import Game
+from game.exceptions import GameSizeOutOfRange, QuestSizeIncorrect
 from game.forms import AvalonUserCreationForm
 from game.models import AvalonGameUser, AvalonUser
 
@@ -43,9 +44,13 @@ def signup(request):
 def new_game(request):
     if request.method == 'POST':
         user_ids = request.POST.getlist('users')
-        game = Game(users=AvalonUser.objects.filter(pk__in=user_ids))
+        try:
+            game = Game(users=AvalonUser.objects.filter(pk__in=user_ids))
 
-        return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
+            return HttpResponseRedirect(reverse('game', args=[game.game.pk]))
+        except GameSizeOutOfRange:
+            # KW: TODO handle and surface this error
+            pass
 
     context = {
         'all_users': AvalonUser.objects.all(),
@@ -142,6 +147,10 @@ def questmaster_suggest(request):
     member_ids = list(map(int, request.POST.getlist('users')))
 
     game = Game(pk=game_pk)
-    game.game.current_quest.reset_members(member_ids)
+    try:
+        game.game.current_quest.reset_members(member_ids)
+    except QuestSizeIncorrect:
+        # KW: TODO handle and surface this error
+        pass
 
     return HttpResponseRedirect(reverse('game', args=[game_pk]))

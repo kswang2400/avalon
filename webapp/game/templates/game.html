@@ -32,42 +32,54 @@
     {% endfor %}
   </div>
   <hr style="height:1px;border:none;color:#333;background-color:#333;" />
-  <div class="whoami">
+  <div id="whoami">
     your role: <div class="float-right">{{ game_user.game_role }}</div><br>
     special knowledge:
-    {% for gu in game_user.special_knowledge %}
-    <div class="float-right">{{ gu.user.username }},</div>
+    {% for gu in game_user.special_knowledge reversed %}
+    <span class="user-list-object">{{ gu.user.username }}</span>
     {% endfor %}
   </div>
   special roles:
-  <div class="float-right">{% for gu in assasin %}assasin,{% endfor %}
-  {% for gu in merlin %}merlin,{% endfor %}
-  {% for gu in mordred %}mordred,{% endfor %}
-  {% for gu in morgana %}morgana,{% endfor %}
-  {% for gu in percival %}percival,{% endfor %}</div><br>
+  <div class="float-right">
+    {% for gu in morgana %}<span style="color:red" class="user-list-object">MORGANA</span>{% endfor %}
+    {% for gu in mordred %}<span style="color:red" class="user-list-object">MORDRED</span>{% endfor %}
+    {% for gu in assasin %}<span style="color:red" class="user-list-object">ASSASIN</span>{% endfor %}
+    {% for gu in percival %}<span style="color:blue" class="user-list-object">PERCIVAL</span>{% endfor %}
+    {% for gu in merlin %}<span style="color:blue" class="user-list-object">MERLIN</span>{% endfor %}
+  </div><br>
 
-  users in order: <div class="float-right">{% for u in users %}{{ u.username }}, {% endfor %}</div><br>
-  quest_master: <div class="float-right">{{ quest_master.user.username }}</div><br>
-
-  quest_members:
-  {% for m in current_quest.members %}
-    <div class="float-right">{{ m.member.user.username }},</div>
-  {% endfor %}
+  users in order:
+  <div class="float-right">
+    {% for u in users reversed %}
+      <span class="user-list-object">
+        {{ u.username }}
+      </span>
+    {% endfor %}
+  </div>
   <br>
   <hr style="height:1px;border:none;color:#333;background-color:#333;" />
   <div class="quest-metadata">
     <div>
-      <div style="font-size:16px; padding-bottom:8px">Votes for quest</div>
-      {% for username, vote in current_quest.votes_for_quest %}
-        <div class="votes-for-quest">
-          {{ username }}:<div class="float-right">{{ vote }}</div>
-        </div>
+      Quest Master: <div class="float-right">{{ quest_master.user.username }}</div><br>
+      Quest Members:<br>
+      {% for m in current_quest.members %}
+        <b>{{ m.member.user.username }}</b><br>
       {% endfor %}
     </div>
     <div>
-      num_players: <div class="float-right">{{ current_quest.num_players }}</div><br>
-      quest is approved: <div class="float-right">{{ current_quest.is_approved }}</div><br>
-      quest is successful: <div class="float-right">{{ current_quest.is_successful }}</div><br>
+      <div style="font-size:16px; padding-bottom:8px">Votes for quest</div>
+      {% for username, vote in current_quest.votes_for_quest %}
+        <div class="votes-for-quest">
+          {{ username }}:
+          <div class="float-right">
+            {% if vote %}
+            <span class="quest-icon-success glyphicon glyphicon-ok" aria-hidden="true"></span>
+            {% else %}
+            <span class="quest-icon-failure glyphicon glyphicon-remove" aria-hidden="true"></span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
     </div>
   </div>
 </div>
@@ -78,6 +90,9 @@
     {% csrf_token %}
     <input type="text" name="game_pk" value={{ pk }} hidden />
     <label for="reset_quest_members">Who should go on this quest?</label>
+    <div class="float-right">
+      {{ current_quest.num_players }} members
+    </div>
     <br>
     <div class="flexbox">
       <div>
@@ -92,7 +107,7 @@
       {% endfor %}
       </div>
       <div class="button-right">
-        <button type="submit" class="btn btn-primary">Pick crew</button>
+        <button type="submit" class="btn btn-primary">Pick members</button>
       </div>
     </div>
   </form><br>

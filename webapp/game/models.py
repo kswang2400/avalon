@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from game.exceptions import QuestSizeIncorrect
+
 
 class AvalonUser(AbstractUser):
     pass
@@ -189,8 +191,9 @@ class AvalonQuest(models.Model):
         return AvalonQuestMember.objects.filter(quest=self)
 
     def reset_members(self, game_user_ids):
-        assert len(game_user_ids) == self.num_players, 'quest size is incorrect'
-        # KW: TODO persist previous tries
+        if len(game_user_ids) != self.num_players:
+            raise QuestSizeIncorrect
+
         AvalonQuestMember.objects.filter(quest=self).delete()
 
         for user_id in game_user_ids:
