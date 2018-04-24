@@ -30,6 +30,14 @@
 
     {% endfor %}
   </div>
+  <div class="whoami">
+    you role: {{ game_user.game_role }}<br>
+
+    <br>special knowledge:<br>
+    {% for gu in game_user.special_knowledge %}
+    {{ gu.user.username }}<br>
+    {% endfor %}<br>
+  </div>
   special roles:
   {% for gu in assasin %}assasin{% endfor %}
   {% for gu in merlin %}merlin{% endfor %}

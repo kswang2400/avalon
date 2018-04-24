@@ -80,14 +80,14 @@
     </div>
 
     <div class="whoami">
-        <h3>who am i</h3>
-        you: {{ game_user.user.username }}<br>
-        {{ game_user.game_role }}<br>
+      <h3>who am i</h3>
+      you: {{ game_user.user.username }}<br>
+      {{ game_user.game_role }}<br>
 
-        <br>special knowledge:<br>
-        {% for gu in game_user.special_knowledge %}
-        {{ gu.user.username }}<br>
-        {% endfor %}<br>
+      <br>special knowledge:<br>
+      {% for gu in game_user.special_knowledge %}
+      {{ gu.user.username }}<br>
+      {% endfor %}<br>
     </div>
   </div>
 
