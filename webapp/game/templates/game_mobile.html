@@ -31,43 +31,47 @@
 
     {% endfor %}
   </div>
+  <hr style="height:1px;border:none;color:#333;background-color:#333;" />
   <div class="whoami">
-    your role: <b>{{ game_user.game_role }}</b><br>
+    your role: <div class="float-right">{{ game_user.game_role }}</div><br>
     special knowledge:
     {% for gu in game_user.special_knowledge %}
-    <b>{{ gu.user.username }},</b>
+    <div class="float-right">{{ gu.user.username }},</div>
     {% endfor %}
   </div>
   special roles:
-  <b>{% for gu in assasin %}assasin,{% endfor %}
+  <div class="float-right">{% for gu in assasin %}assasin,{% endfor %}
   {% for gu in merlin %}merlin,{% endfor %}
   {% for gu in mordred %}mordred,{% endfor %}
   {% for gu in morgana %}morgana,{% endfor %}
-  {% for gu in percival %}percival,{% endfor %}</b><br>
+  {% for gu in percival %}percival,{% endfor %}</div><br>
 
-  users in order: <b>{% for u in users %}{{ u.username }}, {% endfor %}</b><br>
-  quest_master: <b>{{ quest_master.user.username }}</b><br>
+  users in order: <div class="float-right">{% for u in users %}{{ u.username }}, {% endfor %}</div><br>
+  quest_master: <div class="float-right">{{ quest_master.user.username }}</div><br>
 
   quest_members:
   {% for m in current_quest.members %}
-    <b>{{ m.member.user.username }},</b>
+    <div class="float-right">{{ m.member.user.username }},</div>
   {% endfor %}
   <br>
-
+  <hr style="height:1px;border:none;color:#333;background-color:#333;" />
   <div class="quest-metadata">
-    <h4>Quest {{ current_quest.pk }}</h4>
-    {% for username, vote in current_quest.votes_for_quest %}
-      <div class="votes-for-quest">
-        {{ username }}:<b>{{ vote }}</b>
-      </div>
-    {% endfor %}<br>
-    num_players: {{ current_quest.num_players }}<br>
-    quest is approved: {{ current_quest.is_approved }}<br>
-    quest is successful: {{ current_quest.is_successful }}<br>
-    <br>
+    <div>
+      <div style="font-size:16px; padding-bottom:8px">Votes for quest</div>
+      {% for username, vote in current_quest.votes_for_quest %}
+        <div class="votes-for-quest">
+          {{ username }}:<div class="float-right">{{ vote }}</div>
+        </div>
+      {% endfor %}
+    </div>
+    <div>
+      num_players: <div class="float-right">{{ current_quest.num_players }}</div><br>
+      quest is approved: <div class="float-right">{{ current_quest.is_approved }}</div><br>
+      quest is successful: <div class="float-right">{{ current_quest.is_successful }}</div><br>
+    </div>
   </div>
 </div>
-
+<hr style="height:1px;border:none;color:#333;background-color:#333;" />
 <div id="game-actions">
   {% if quest_master.user.pk == game_user.user.pk %}
   <form action="/suggest/" method="POST">
@@ -77,7 +81,7 @@
     <br>
     <div class="flexbox">
       <div>
-      {% for game_user in game_users %}
+      {% for game_userx in game_users %}
         <input
           type="checkbox"
           id={{ game_user.pk }}

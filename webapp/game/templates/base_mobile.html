@@ -12,9 +12,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <style>
-    b {
-        float: right;
-    }
+        b {
+            float: right;
+        }
+
         body {
             margin: 16px 24px;
         }
@@ -49,12 +50,27 @@
             margin: 8px;
         }
 
+        .float-right {
+            float: right;
+            font-weight: bold;
+        }
+
+        #header {
+            height: 24px;
+        }
+
         .quest-icon-success {
             color: green;
         }
 
         .quest-icon-failure {
             color: red;
+        }
+
+        .quest-metadata {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
 
         .white-border {
@@ -67,13 +83,21 @@
 <body>
     <div id="header">
         {% if user.id %}
-            {{ user }}
-            <a name="logout" href='/logout/'>Logout</a>
+            <div style="float:left">
+                <a name="home" href="/"><button class="btn btn-info">Home</button></a>
+            </div>
+            <div style="float:right">
+                <a name="logout" href='/logout/'><button class="btn btn-danger">Logout</button></a>
+            </div>
         {% else %}
-            <a name="signup" href='/signup/'>Sign Up</a>
-            <a name="login" href='/login/'>Login</a>
+            <div style="float:left"></div>
+            <div style="float:right">
+                <a name="signup" href='/signup/'><button class="btn btn-primary">Sign Up</button></a>
+                <a name="login" href='/login/'><button class="btn btn-primary">Login</button></a>
+            </div>
         {% endif %}
     </div>
+    <hr style="height:1px;border:none;color:#333;background-color:#333;" />
     <div id="content">
         {% block content %}{% endblock %}
     </div>
