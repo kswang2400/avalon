@@ -78,10 +78,7 @@ def game(request, pk):
     context['special_knowledge'] = game_user.special_knowledge
     context['user_on_quest'] = check_if_quest_member(game_user, context['current_quest'])
 
-    if is_mobile:
-        return render(request, 'game_mobile.html', context)
-    else:
-        return render(request, 'game.html', context)
+    return render(request, 'game.html', context)
 
 def finalize_quest(request):
     # KW: this should be a POST handler decorator
