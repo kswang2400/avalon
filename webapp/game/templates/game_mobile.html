@@ -36,7 +36,7 @@
     <br>special knowledge:<br>
     {% for gu in game_user.special_knowledge %}
     {{ gu.user.username }}<br>
-    {% endfor %}<br>
+    {% endfor %}
   </div>
   special roles:
   {% for gu in assasin %}assasin{% endfor %}
@@ -51,7 +51,7 @@
   {% for m in current_quest.members %}
     <text>{{ m.member.user.username }}, </text>
   {% endfor %}
-  <br><br>
+  <br>
 
   <div class="quest-metadata">
     <h4>Quest {{ current_quest.pk }}</h4>
@@ -60,6 +60,11 @@
     quest is approved: {{ current_quest.is_approved }}<br>
     quest is successful: {{ current_quest.is_successful }}<br>
     <br>
+    {% for username, vote in current_quest.votes_for_quest %}
+      <div class="votes-for-quest">
+        {{ username }}: {{ vote }}
+      </div>
+    {% endfor %}<br>
   </div>
 </div>
 
