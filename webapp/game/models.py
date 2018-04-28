@@ -187,6 +187,10 @@ class AvalonQuest(models.Model):
         return all([vote for username, vote in self.votes_on_quest])
 
     @property
+    def status(self):
+        pass
+
+    @property
     def members(self):
         return AvalonQuestMember.objects.filter(quest=self)
 

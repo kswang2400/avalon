@@ -9,7 +9,6 @@
 
     {% if quest.pk == current_quest.pk %}
     <div class="box blue-border">
-      Quest {{ quest.pk }}<br>
       {{ quest.num_players }}<br>
       {% if quest.is_successful %}
       <span class="quest-icon-success glyphicon glyphicon-ok" aria-hidden="true"></span>
@@ -19,7 +18,6 @@
     </div>
     {% else %}
     <div class="box white-border">
-      Quest {{ quest.pk }}<br>
       {{ quest.num_players }}<br>
       {% if quest.is_successful %}
       <span class="quest-icon-success glyphicon glyphicon-ok" aria-hidden="true"></span>
@@ -43,7 +41,7 @@
   <div class="float-right">
     {% for gu in morgana %}<span style="color:red" class="user-list-object">MORGANA</span>{% endfor %}
     {% for gu in mordred %}<span style="color:red" class="user-list-object">MORDRED</span>{% endfor %}
-    {% for gu in assasin %}<span style="color:red" class="user-list-object">ASSASIN</span>{% endfor %}
+    {% for gu in assasin %}<span style="color:red" class="user-list-object">ASSASSIN</span>{% endfor %}
     {% for gu in percival %}<span style="color:blue" class="user-list-object">PERCIVAL</span>{% endfor %}
     {% for gu in merlin %}<span style="color:blue" class="user-list-object">MERLIN</span>{% endfor %}
   </div><br>
