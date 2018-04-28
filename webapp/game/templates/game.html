@@ -63,6 +63,14 @@
       {% for m in current_quest.members %}
         <b>{{ m.member.user.username }}</b><br>
       {% endfor %}
+      Votes on Quest:<br>
+      {% for vote in votes_on_quest %}
+        {% if vote %}
+        <span class="quest-icon-success glyphicon glyphicon-ok" aria-hidden="true"></span>
+        {% else %}
+        <span class="quest-icon-failure glyphicon glyphicon-remove" aria-hidden="true"></span>
+        {% endif %}
+      {% endfor %}
     </div>
     <div>
       <div style="font-size:16px; padding-bottom:8px">Votes for quest</div>
@@ -145,7 +153,7 @@
   </form><br>
   {% endif %}
 
-  {% if game_user.user.pk == game_owner.pk %}
+  {% if game_user.user.pk == quest_master.user.pk %}
   <div class="flexbox">
     <form action="/finalize_vote_for_quests/" method="POST">
       {% csrf_token %}

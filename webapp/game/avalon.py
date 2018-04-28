@@ -56,6 +56,8 @@ class Game(object):
             'quests',
             'quest_master',
             'game_users',
+
+            'votes_on_quest',
         ]
 
         debug_context = {
@@ -102,6 +104,14 @@ class SavedGame(object):
         self.quest_master = self.avalon_game.quest_master
         self.game_users = self.avalon_game.game_users
 
+        self.votes_on_quest = [
+            x[1]
+            for x
+            in self.avalon_game.current_quest.votes_on_quest
+        ]
+
+        return
+
 class NewGame(object):
     def __init__(self, users):
         self._create_empty_roles()
@@ -119,6 +129,12 @@ class NewGame(object):
         self.quest_master = self.avalon_game.quest_master
         self.game_users = self.avalon_game.game_users
         self.first_quest = self.avalon_game.first_quest
+
+        self.votes_on_quest = [
+            x[1]
+            for x
+            in self.avalon_game.current_quest.votes_on_quest
+        ]
 
         return
 
