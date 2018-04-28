@@ -147,7 +147,7 @@
   </form><br>
   {% endif %}
 
-  {% if game_user.user.username == 'kevin' %}
+  {% if game_user.user.pk == game_owner.pk %}
   <div class="flexbox">
     <form action="/finalize_vote_for_quests/" method="POST">
       {% csrf_token %}

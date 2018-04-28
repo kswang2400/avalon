@@ -79,6 +79,7 @@ def game(request, pk):
     game_user = AvalonGameUser.objects.get(game_id=pk, user=user)
 
     context = game.get_debug_context(debug=debug)
+    context['game_owner'] = game.game.avalon_game.user
     context['game_user'] = game_user
     context['special_knowledge'] = game_user.special_knowledge
     context['user_on_quest'] = check_if_quest_member(game_user, context['current_quest'])
