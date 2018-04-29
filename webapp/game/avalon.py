@@ -163,9 +163,7 @@ class NewGame(object):
         return self.roles
 
     def _distribute_roles(self, users, roles):
-        random.shuffle(list(users))
-        random.shuffle(list(roles))
-
+        random.shuffle(roles)
         ordered_users_with_roles = list(zip(users, roles))
 
         # KW: TODO its time to define game interface for saved/new game
